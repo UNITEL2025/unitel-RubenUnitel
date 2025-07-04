@@ -1,0 +1,27 @@
+.myContainer {
+    width:25%;
+    float:left;
+    padding: 10px 10px;
+    }
+
+.color {
+    background-color: lightblue;
+}
+.centrado {
+    width: 90%;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.img {
+    width: 150px;
+}
+
+.img100 {
+    width: 100%;
+}
+
+p {
+    text-align: justify;
+    margin: 25px 0;
+}

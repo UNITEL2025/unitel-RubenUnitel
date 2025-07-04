@@ -1,0 +1,100 @@
+/* Selector único id */
+#id_p {
+    color:red;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 20px;
+}
+/* Selector clase */
+.clase_p {
+    color:greenyellow;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: 3em;
+}
+/* Selector padre + hijo */
+.class_parent > .clase_p {
+    color:blueviolet;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: 250%;
+}
+/* Selector genérico */
+button {
+    background-color: black;
+    color:white;
+}
+/* Selector genérico + clase */
+p.right {
+  text-align: right;
+  color: red;
+}
+/* Selector universal => Todo el documento */
+/** {
+    background-color:aliceblue;
+    text-align: center;
+}*/
+/* Múltiples selectores */
+h3, h4, h5 {
+  text-align: left;
+  color: yellow;
+}
+/* Cambiar tamaño iconos de google */
+.material-icons {
+    font-size: 600%;
+}
+/* Cambiar la fuente del todo el documento */
+* {
+  font-family: "Bitcount Grid Double", system-ui;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-variation-settings: "slnt" 0,
+    "CRSV" 0.5,
+    "ELSH" 0,
+    "ELXP" 0;
+}
+/* Efectos Links */
+/* unvisited link */
+a:link {
+  color: red;
+}
+
+/* visited link */
+a:visited {
+  color: green;
+}
+
+/* mouse over link */
+a:hover {
+  color: hotpink;
+}
+
+/* selected link */
+a:active {
+  color: blue;
+}
+/* Posiciones */
+div.relative {
+  position: relative;
+  left: 300px;
+  border: 3px solid #73AD21;
+  background-color: aquamarine;
+}
+/* Ajustar z-index */
+#myImg {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  z-index: -1;
+  width: 25%;
+}
+#myImg2 {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  z-index: -1;
+}
+p {
+  color: red !important;
+}
+p {
+  color: blue;
+}
