@@ -1,0 +1,5 @@
+{"id_pregunta":1,"pregunta":"\u00bfEsta es mi pregunta?","respuestas":["Respuesta 1","Respuesta 2","Respuesta 3","Respuesta 4"],"correcta":1}
+{"id_pregunta":1,"pregunta":"\u00bfEsta es mi pregunta?","respuestas":["Respuesta 1","Respuesta 2","Respuesta 3","Respuesta 4"],"correcta":1}
+{"id_pregunta":1,"pregunta":"\u00bfEsta es mi pregunta?","respuestas":["Respuesta 1","Respuesta 2","Respuesta 3","Respuesta 4"],"correcta":1}
+{"id_pregunta":1,"pregunta":"\u00bfEsta es mi pregunta?","respuestas":["Respuesta 1","Respuesta 2","Respuesta 3","Respuesta 4"],"correcta":1}
+{"id_pregunta":1,"pregunta":"\u00bfEsta es mi pregunta?","respuestas":["Respuesta 1","Respuesta 2","Respuesta 3","Respuesta 4"],"correcta":1}

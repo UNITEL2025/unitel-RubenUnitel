@@ -1,0 +1,13 @@
+[16-07-2025 14:40:33] [PELIGRO] Hemos creado el primer registro del log.
+[16-07-2025 14:40:58] [PELIGRO] Hemos creado el primer registro del log.
+[16-07-2025 14:40:58] [INFO] Hemos añadido una nueva línea.
+[17-07-2025 08:47:56] [PELIGRO] Hemos creado el primer registro del log.
+[17-07-2025 08:47:56] [INFO] Hemos añadido una nueva línea.
+[17-07-2025 08:51:25] [PELIGRO] Hemos creado el primer registro del log.
+[17-07-2025 08:51:25] [INFO] Hemos añadido una nueva línea.
+[17-07-2025 08:52:31] [PELIGRO] Hemos creado el primer registro del log.
+[17-07-2025 08:52:31] [INFO] Hemos añadido una nueva línea.
+[17-07-2025 08:56:42] [PELIGRO] Hemos creado el primer registro del log.
+[17-07-2025 08:56:42] [INFO] Hemos añadido una nueva línea.
+[17-07-2025 08:56:59] [PELIGRO] Hemos creado el primer registro del log.
+[17-07-2025 08:56:59] [INFO] Hemos añadido una nueva línea.
