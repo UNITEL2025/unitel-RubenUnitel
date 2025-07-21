@@ -17,26 +17,25 @@ class pregunta {
         array $respuestas,
         int $correcta
     ) {
-        if ($this->id_pregunta == null)
-        {
-            $this->id_pregunta = $this->getLastId();
-        }
-        else
-        {
-            $this->id_pregunta = $id_pregunta;
-        }
+        $this->id_pregunta = $id_pregunta;
         $this->pregunta = $pregunta;
         $this->respuestas = $respuestas;
         $this->correcta = $correcta;
     }
 
     //Guardar una pregunta (permanentemente)
+    //TODO Hacer parte de update
     function save() {
-        //1. Abrir el archivo
+        //1. Si la pregunta no tiene id, entonces buscamos el último
+        if ($this->id_pregunta == null)
+        {
+            $this->id_pregunta = $this->getLastId();
+        }
+        //2. Abrir el archivo
         $myfile = fopen($this->filename, "a") or die("Unable to open file!");
-        //2.Escribir
+        //3.Escribir
         fwrite($myfile, $this->toJSON()."\n");
-        //3. Cerrar archivo
+        //4. Cerrar archivo
         fclose($myfile);
     }
 
@@ -47,11 +46,11 @@ class pregunta {
 
     function getLastId() : int {
         //Obtenemos el número total de preguntas
-        return count($this->getAllJSON());
+        return count($this->getAll());
     }
 
     //Obtener todas las preguntas en formato JSON
-    function getAllJSON() : array {
+    function getAll() : array {
         //Variable de salida donde meteremos los objetos pregunta
         $salida = array();
 
@@ -78,33 +77,32 @@ class pregunta {
         foreach ($lineas as $key => $value) {
             if (json_decode($value) != null)
             {
-                $salida[] = json_decode($value);
+                //Descodificamos la cadena JSON en un objeto estándar
+                $obj = json_decode($value);
+
+                //Instanciar una pregunta desde el objeto estándar
+                $item = new pregunta(
+                     $obj->id_pregunta,
+                     $obj->pregunta,
+                     (array) $obj->respuestas,
+                     $obj->correcta
+                );
+
+                //Asigamos el objeto al array de salida
+                $salida[] = $item;
             }
         }
         //3. Devolver el array de preguntas
         return $salida;
     }
-    //Instanciar una pregunta desde el objeto estándar
-            // $item = new pregunta(
-            //     $obj->id_pregunta,
-            //     $obj->pregunta,
-            //     (array) $obj->respuestas,
-            //     $obj->correcta
-            // );
 
-    //TODO Obtener una solo pregunta por id
+    //Obtener una solo pregunta por id
+    function getById() : pregunta {
+        //1. Obtener todas las preguntas -> GetAll()
+        //2. Localizar la pregunta con un bucle
+        //2.1 Si la encuentra devolverla
+        //2.2 Si no la encuentra -> Devolver una instaqncia de pregunta vacía
+    }
     //TODO Actualizar una pregunta
     //TODO Eliminar
-
-    // $pregunta = array(
-    //     "id_pregunta" => 0,
-    //     "pregunta" => "Cadena de texto de la pregunta...",
-    //     "respuestas" => array(
-    //         0 => "Respuesta...",
-    //         1 => "Respuesta...",
-    //         2 => "Respuesta...",
-    //         3 => "Respuesta..."
-    //     ),
-    //     "correcta" => 1
-    // );
 }
