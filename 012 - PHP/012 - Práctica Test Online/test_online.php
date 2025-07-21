@@ -5,7 +5,7 @@
 require "clases/pregunta.php";
 
 //Instancio una pregunta de prueba
-for ($i=0; $i < 10; $i++) { 
+/*for ($i=0; $i < 10; $i++) { 
     $pregunta = new pregunta(
         null,
         "¿Esta es mi pregunta? $i",
@@ -19,7 +19,17 @@ for ($i=0; $i < 10; $i++) {
     );
     //La guardo y compruebo el archivo
     $pregunta->save();
-}
+}*/
+
+//Probar a instanciar una pregunta según su id
+$pregunta = new pregunta(2);
+var_dump($pregunta->id_pregunta);
+var_dump($pregunta->pregunta);
+
+//Probar a instanciar una pregunta que no exista
+/*$pregunta = new pregunta(100);
+var_dump($pregunta->id_pregunta);
+var_dump($pregunta->pregunta);*/
 
 
 //if (! session_start()) die("OMG, total session asplosion.");

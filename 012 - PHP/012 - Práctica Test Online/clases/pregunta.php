@@ -12,15 +12,30 @@ class pregunta {
 
     //Constructor
     function __construct (
-        $id_pregunta, //Int o null
-        string $pregunta,
-        array $respuestas,
-        int $correcta
+        $id_pregunta = null,
+        string $pregunta = "",
+        array $respuestas = array(),
+        int $correcta = 1
     ) {
-        $this->id_pregunta = $id_pregunta;
-        $this->pregunta = $pregunta;
-        $this->respuestas = $respuestas;
-        $this->correcta = $correcta;
+        //Sí el constructor tra eun id mayor o igual a cero
+        //Entonces, instancia la pregunta
+        if ($id_pregunta >= 0)
+        {
+            //Instancio la pregunta
+            $item = $this->getById($id_pregunta);
+            //Reasigno valores de los atributos
+            $this->id_pregunta = $item->id_pregunta;
+            $this->pregunta = $item->pregunta;
+            $this->respuestas = $item->respuestas;
+            $this->correcta = $item->correcta;
+        }
+        else
+        {
+            $this->id_pregunta = $id_pregunta;
+            $this->pregunta = $pregunta;
+            $this->respuestas = $respuestas;
+            $this->correcta = $correcta;
+        }       
     }
 
     //Guardar una pregunta (permanentemente)
@@ -97,12 +112,21 @@ class pregunta {
     }
 
     //Obtener una solo pregunta por id
-    function getById() : pregunta {
+    function getById(int $id) : pregunta {
         //1. Obtener todas las preguntas -> GetAll()
         //2. Localizar la pregunta con un bucle
-        //2.1 Si la encuentra devolverla
-        //2.2 Si no la encuentra -> Devolver una instaqncia de pregunta vacía
+        foreach ($this->getAll() as $pregunta)
+        {
+            //2.1 Si la encuentra devolverla
+            if ($id == $pregunta->id_pregunta)
+            {
+                return $pregunta;
+            }
+        }
+        //2.2 Si no la encuentra -> Devolver una instancia de pregunta vacía
+        return new pregunta();
     }
+
     //TODO Actualizar una pregunta
     //TODO Eliminar
 }
