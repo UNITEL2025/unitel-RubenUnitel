@@ -1,0 +1,9 @@
+LÓGICA CONTROLADOR
+=============================
+1) Obtener la variable $_POST
+2) Hacer un switch con los casos: baja, media y alta
+3) Para cada caso, generar el código:
+3.1) BAJA: 4 dígitos.
+3.2) MEDIA: 4 dígitos y una letra mayús.
+3.3) ALTA: 8 caracteres con (dígitos + letra minús + letra mayús + símbolo)
+4) Recargar el HTML con los datos originales y la pass generada
