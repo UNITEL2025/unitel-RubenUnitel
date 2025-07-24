@@ -6,17 +6,20 @@ $checked = [
 ];
 
 //Definimos variables del script
-$seguridad;
-$pass = "";
-$lmayus = "QWERTYUIOPASDFGHJKLZXCVBNM";
-$lminus = "qwertyuiopasdfghjklzxcvbnm";
-$symbols = "@#$%&/()[]{}";
+$seguridad; //Me indica si el usuario indica si la quiere baja/media/alta
+$pass = ""; //Declaro
+$lmayus = "QWERTYUIOPASDFGHJKLZXCVBNM"; //Defino una cadena de texto letras mayús
+$lminus = "qwertyuiopasdfghjklzxcvbnm"; //Defino una cadena de texto letras minús
+$symbols = "@#$%&/()[]{}";  //Defino una cadena de texto de símbolos
 
 //Obtenemos variables de $_POST
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["seguridad"]))
 {
+    //Paso la selección del usuario a una variable
     $seguridad = $_POST["seguridad"];
 
+    //Asigno al array de los radio buttons el valor seleccionado por el usuario
+    //$checked["ALTA"] = "checked";
     $checked[$seguridad] = 'checked';
 
     //Generamos la contraseña
@@ -27,13 +30,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["seguridad"]))
             for ($i=0; $i < 4; $i++) { 
                 $pass .= (string) rand(0, 9);
             }
+            //Salida: "8569"
             break;
         //Contraseña de 4 dígitos + 1 letra mayús
         case "MEDIA":
             for ($i=0; $i < 4; $i++) { 
                 $pass .= (string) rand(0, 9);
             }
+            //$pass .= substr($lmayus, rand(0, strlen($lmayus)), 1);
+            //substr(cadena, pos inicial, número caracteres)
+            //$cadena = $lmayus; Cadena de texto
+            //$longitud = strlen($lmayus); //longitud de la cadena
+            //$aleatorio = rand(0, $longitud); //Número aleatorio desde cero hasta el límite de la cadena => Ej. 5
+            //cadena = "qwertyuiop"
             $pass .= substr($lmayus, rand(0, strlen($lmayus)), 1);
+            //Salida: 7412A
             break;
         //Contraseña 8 caracteres: dígitos + letra mayús + letra minús + símbolo
         case "ALTA":
@@ -43,6 +54,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["seguridad"]))
             $pass .= substr($lmayus, rand(0, strlen($lminus)), 1);
             $pass .= substr($lminus, rand(0, strlen($lminus)), 1);
             $pass .= substr($symbols, rand(0, strlen($symbols)), 1);
+            //Salida: 4125aA$
             break;
     }
 }
