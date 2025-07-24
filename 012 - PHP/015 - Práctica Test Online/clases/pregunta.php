@@ -1,129 +1,142 @@
 <?php
 
+require_once "tools/files.php";
+
 class pregunta {
-    //Propiedad
-    public $id_pregunta; //Auto Incrementado
+    // Propiedades
+    public $id_pregunta; // Auto Incrementado
     public $pregunta;
     public $respuestas;
     public $correcta;
 
-    //Propiedad genérica
+    // Propiedad genérica
     private static $filename = "preguntas.txt";
 
-    //Constructor
-    function __construct (
+    // Constructor
+    public function __construct(
         $id_pregunta = null,
         string $pregunta = "",
-        array $respuestas = array(),
+        array $respuestas = [],
         int $correcta = 1
     ) {
-
         $this->id_pregunta = $id_pregunta;
         $this->pregunta = $pregunta;
         $this->respuestas = $respuestas;
-        $this->correcta = $correcta;     
+        $this->correcta = $correcta;
     }
 
-    //Guardar una pregunta (permanentemente)
-    //TODO Actualizar
-    function save() {
+    // Convierte el objeto en JSON
+    public function toJSON(): string {
+        return json_encode($this);
+    }
+
+    // Guardar una pregunta (permanentemente)
+    public function save(): void {
         if ($this->id_pregunta === null) {
             $this->id_pregunta = self::getNextId();
         }
 
-        // Mismo código de guardar (append si es nuevo, o actualizar si ya existe)
-        //$preguntas = self::getAll();
+        $items = files::read(self::$filename);
 
-        // Si existe actualizar
-        /*$encontrado = false;
-        foreach ($preguntas as &$p) {
-            if ($p->id_pregunta == $this->id_pregunta) {
-                $p = $this;
-                $encontrado = true;
+        // Decodificar, actualizar si ya existe (por id), o añadir
+        $found = false;
+        foreach ($items as $i => $item) {
+            $obj = json_decode($item);
+            if ($obj !== null && $obj->id_pregunta == $this->id_pregunta) {
+                $items[$i] = $this->toJSON();
+                $found = true;
                 break;
             }
         }
-        if (!$encontrado) {
-            $preguntas[] = $this;
-        }*/
 
-        // Guardar todo en archivo
-        $fp = fopen(self::$filename, "a") or die("No se pudo abrir el archivo!");
-        fwrite($fp, $this->toJSON() . "\n");
-        /*foreach ($preguntas as $p) {
-            fwrite($fp, $p->toJSON() . "\n");
-        }*/
-        fclose($fp);
+        if (!$found) {
+            $items[] = $this->toJSON();
+        }
+
+        files::write(self::$filename, $items);
     }
 
-    //Transforma el objeto en UN JSON
-    function toJSON() : string {
-        return json_encode($this);
-    }
-
-    // Método estático para obtener el último ID disponible
+    // Obtener el próximo ID disponible
     public static function getNextId(): int {
-        $preguntas = self::getAll();
-        $max_id = 0;
-        foreach ($preguntas as $p) {
-            if ($p->id_pregunta > $max_id) $max_id = $p->id_pregunta;
-        }
-        return $max_id + 1;
-    }
+        $items = files::read(self::$filename);
+        $max_id = -1; // Comenzar desde -1 para que el primer ID sea 0
 
-    //Obtener todas las preguntas en formato JSON
-    public static function getAll(): array {
-        $salida = array();
-
-        if (!file_exists(self::$filename) || filesize(self::$filename) == 0) {
-            return $salida;
-        }
-
-        $myfile = fopen(self::$filename, "r") or die("Unable to open file!");
-
-        while (($line = fgets($myfile)) !== false) {
-            $line = trim($line);
-            if ($line != "") {
-                $obj = json_decode($line);
-                if ($obj !== null) {
-                    $item = new pregunta(
-                        $obj->id_pregunta,
-                        $obj->pregunta,
-                        (array)$obj->respuestas,
-                        $obj->correcta
-                    );
-                    $salida[] = $item;
-                }
+        foreach ($items as $item) {
+            $obj = json_decode($item);
+            if ($obj !== null && isset($obj->id_pregunta) && $obj->id_pregunta > $max_id) {
+                $max_id = $obj->id_pregunta;
             }
         }
 
-        fclose($myfile);
+        return $max_id + 1;
+    }
+
+
+    // Obtener todas las preguntas
+    public static function getAll(): array {
+        $salida = [];
+
+        $items = files::read(self::$filename);
+        foreach ($items as $item) {
+            $obj = json_decode($item);
+            if ($obj !== null) {
+                $salida[] = new pregunta(
+                    $obj->id_pregunta,
+                    $obj->pregunta,
+                    (array)$obj->respuestas,
+                    $obj->correcta
+                );
+            }
+        }
 
         return $salida;
     }
 
-    //Obtener una solo pregunta por id
-    function getById(int $id) : pregunta {
-        //1. Obtener todas las preguntas -> GetAll()
-        //2. Localizar la pregunta con un bucle
-        foreach ($this->getAll() as $pregunta)
-        {
-            //2.1 Si la encuentra devolverla
-            if ($id == $pregunta->id_pregunta)
-            {
-                return $pregunta;
+    // Obtener una sola pregunta por ID
+    public static function getById(int $id): pregunta {
+        foreach (files::read(self::$filename) as $item) {
+            $obj = json_decode($item);
+            if ($obj !== null && $obj->id_pregunta == $id) {
+                return new pregunta(
+                    $obj->id_pregunta,
+                    $obj->pregunta,
+                    (array)$obj->respuestas,
+                    $obj->correcta
+                );
             }
         }
-        //2.2 Si no la encuentra -> Devolver una instancia vacía
-        return new pregunta();
+
+        return new pregunta(); // Retorna instancia vacía si no la encuentra
     }
 
-    //Elimina todas las preguntas (vacía el archivo)
-    function deleteAll() {
-        $myfile = fopen($this->filename, "w") or die("Unable to open file!");
-        /*foreach ($preguntas as $item) {
-            fwrite($myfile, $item->toJSON()."\n");
-        } */           
-        fclose($myfile);
+    // Elimina todas las preguntas (vacía el archivo)
+    public static function deleteAll(): void {
+        files::delete(self::$filename);
+    }
+
+    // Crea preguntas de prueba
+    public static function setDummies(int $total = 20): void {
+        for ($i = 0; $i < $total; $i++) {
+            $correcta = rand(0, 3);
+            $pregunta = new pregunta(
+                null,
+                "¿Esta es mi pregunta? $i",
+                [
+                    "Respuesta 1 de P$i".(($correcta == 0) ? " [CORRECTA]" : ""),
+                    "Respuesta 2 de P$i".(($correcta == 1) ? " [CORRECTA]" : ""),
+                    "Respuesta 3 de P$i".(($correcta == 2) ? " [CORRECTA]" : ""),
+                    "Respuesta 4 de P$i".(($correcta == 3) ? " [CORRECTA]" : "")
+                ],
+                $correcta
+            );
+            $pregunta->save();
+        }
+    }
+
+    // Devuelve un array de objetos pregunta según el número que se le indique (los devuelve mezclados)
+    public static function getTest(int $total = 5): array {
+        $items = pregunta::getAll();
+        shuffle($items);
+        return array_slice($items, 0, $total);
     }
 }
