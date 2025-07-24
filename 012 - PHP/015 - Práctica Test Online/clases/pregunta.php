@@ -32,6 +32,13 @@ class pregunta {
 
     // Guardar una pregunta (permanentemente)
     public function save(): void {
+        //Función dinámica y dentro de la misma clase: $this->funcion();
+        //Función estática y dentro de la misma clase: self::funcion(id_pregunta);
+
+        //Fuera de la clase:
+        //Dinámicas (instancia): $objeto = new pregunta();
+        //Dinámico: pregunta::funcion_estatica();
+
         if ($this->id_pregunta === null) {
             $this->id_pregunta = self::getNextId();
         }
@@ -40,31 +47,34 @@ class pregunta {
 
         // Decodificar, actualizar si ya existe (por id), o añadir
         $found = false;
-        foreach ($items as $i => $item) {
-            $obj = json_decode($item);
-            if ($obj !== null && $obj->id_pregunta == $this->id_pregunta) {
-                $items[$i] = $this->toJSON();
+        foreach ($items as $i => $item) { //recorro el array de JSON (que son preguntas en JSON)
+            $obj = json_decode($item); //Descodificar en un objeto estándar
+            if ($obj !== null && $obj->id_pregunta == $this->id_pregunta) { //Si no es null + id_pregunta coincide
+                $items[$i] = $this->toJSON();//Reescribe la línea JSON en el array
                 $found = true;
                 break;
             }
         }
 
+        //Si no ha sido encontrado, significa que es nueva, por tanto la incluye en el array
         if (!$found) {
             $items[] = $this->toJSON();
         }
 
+        //Escribimos en el archivo
         files::write(self::$filename, $items);
     }
 
     // Obtener el próximo ID disponible
     public static function getNextId(): int {
-        $items = files::read(self::$filename);
+        $items = files::read(self::$filename); //Obtengo todos los items (array de JSON)
         $max_id = -1; // Comenzar desde -1 para que el primer ID sea 0
 
-        foreach ($items as $item) {
-            $obj = json_decode($item);
+        foreach ($items as $item) { //Recorro los items
+            $obj = json_decode($item); //descodifico en objeto estándar
+            //Si el objeto no es null + tiene id_pregunta + el id_pregunta es superior el max
             if ($obj !== null && isset($obj->id_pregunta) && $obj->id_pregunta > $max_id) {
-                $max_id = $obj->id_pregunta;
+                $max_id = $obj->id_pregunta; //Lo asigno a máximo
             }
         }
 
@@ -80,6 +90,7 @@ class pregunta {
         foreach ($items as $item) {
             $obj = json_decode($item);
             if ($obj !== null) {
+                //Array de objeto pregunta
                 $salida[] = new pregunta(
                     $obj->id_pregunta,
                     $obj->pregunta,
@@ -94,9 +105,10 @@ class pregunta {
 
     // Obtener una sola pregunta por ID
     public static function getById(int $id): pregunta {
-        foreach (files::read(self::$filename) as $item) {
-            $obj = json_decode($item);
-            if ($obj !== null && $obj->id_pregunta == $id) {
+        foreach (files::read(self::$filename) as $item) { //Recorro array de jesons
+            $obj = json_decode($item); //lo descodifico en objeto estandar
+            if ($obj !== null && $obj->id_pregunta == $id) { //Comprobaciones
+                //Los transformo en objeto pregunta y devuelvo la instancia de una pregunta
                 return new pregunta(
                     $obj->id_pregunta,
                     $obj->pregunta,
@@ -135,8 +147,8 @@ class pregunta {
 
     // Devuelve un array de objetos pregunta según el número que se le indique (los devuelve mezclados)
     public static function getTest(int $total = 5): array {
-        $items = pregunta::getAll();
-        shuffle($items);
-        return array_slice($items, 0, $total);
+        $items = pregunta::getAll(); //Array de objetos pregunta
+        shuffle($items);//Desordena el array
+        return array_slice($items, 0, $total); //Cojo 10 posiciones
     }
 }

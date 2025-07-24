@@ -7,4 +7,9 @@
 {"id_juego":6,"id_jugador":null,"step":2,"name":"fth","test":[8,10,5,3,15],"last_ask":5,"respuestas":["1","1","1","1","1"]}
 {"id_juego":7,"id_jugador":null,"step":0,"name":"","test":[0,9,4,15,12],"last_ask":1,"respuestas":["1"]}
 {"id_juego":8,"id_jugador":null,"step":2,"name":"dfdfd","test":[14,2,17,13,3],"last_ask":5,"respuestas":["0","0","0","0","0"]}
-{"id_juego":9,"id_jugador":null,"step":0,"name":"","test":[19,1,6,13,7],"last_ask":0,"respuestas":[]}
+{"id_juego":9,"id_jugador":null,"step":2,"name":"ruben","test":[19,1,6,13,7],"last_ask":5,"respuestas":["0","0","2","2","0"]}
+{"id_juego":10,"id_jugador":null,"step":2,"name":"ruben","test":[11,2,4,13,7],"last_ask":5,"respuestas":["0","0","2","0","0"]}
+{"id_juego":11,"id_jugador":null,"step":2,"name":"sdsd","test":[10,19,11,13,4],"last_ask":5,"respuestas":["1","1","1","1","1"]}
+{"id_juego":12,"id_jugador":null,"step":2,"name":"ruben","test":[4,8,2,12,3],"last_ask":5,"respuestas":["0","0","0","0","0"]}
+{"id_juego":13,"id_jugador":null,"step":2,"name":"ruben","test":[6,7,10,17,1],"last_ask":5,"respuestas":["0","0","2","0","0"]}
+{"id_juego":14,"id_jugador":null,"step":0,"name":"","test":[16,6,7,0,9],"last_ask":0,"respuestas":[]}

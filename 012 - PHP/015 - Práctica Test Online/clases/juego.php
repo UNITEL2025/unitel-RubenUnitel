@@ -4,15 +4,15 @@ require_once "tools/files.php";
 require_once "clases/pregunta.php";
 
 class juego {
-    public $id_juego;
-    public $id_jugador;
-    public $step;
-    public $name;
-    public $test;
-    public $last_ask;
-    public $respuestas;
+    public $id_juego; //AUTO Único
+    public $id_jugador;//Sobra
+    public $step;//El paso por el que va el jugador
+    public $name;//Nombre del jugador
+    public $test;//getTest()
+    public $last_ask;//última pregunta que hecho usuario
+    public $respuestas;//Respuestas del usuario
 
-    private static $filename = "juegos.txt";
+    private static $filename = "juegos.txt"; //Defino el archivo del juego
 
     public function __construct(
         $id_juego = null,
@@ -27,9 +27,10 @@ class juego {
         $this->id_jugador = $id_jugador;
         $this->step = $step;
         $this->name = $name;
-        $this->test = $test ?: [];
+        $this->test = $test;
 
-        if (empty($this->test)) {
+        //Opción si el id == null
+        if (empty($this->test)) { //Esto es lo mismo count($this->test) == 0
             foreach (pregunta::getTest() as $item) {
                 $this->test[] = $item->id_pregunta;
             }

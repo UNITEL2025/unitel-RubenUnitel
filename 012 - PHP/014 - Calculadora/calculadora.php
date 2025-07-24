@@ -5,8 +5,8 @@ $resultado = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Recogemos expresión actual y el botón pulsado
-    $expresion = $_POST['expresion'] ?? '';
-    $boton = $_POST['boton'] ?? '';
+    $expresion = $_POST['expresion'] ?? ''; //ej. 8
+    $boton = $_POST['boton'] ?? ''; //ej +
 
     // Si botón es "C" limpiamos expresión
     if ($boton === 'C') {
@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ];
         $boton_valor = $map[$boton] ?? $boton;
 
-        $expresion .= $boton_valor;
+        $expresion .= $boton_valor; //ej "8*"
     }
 }
 ?>

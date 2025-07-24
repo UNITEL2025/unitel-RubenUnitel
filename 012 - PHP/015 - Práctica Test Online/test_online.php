@@ -5,11 +5,6 @@
 require "clases/pregunta.php";
 require "clases/juego.php";
 
-//if (! session_start()) die("OMG, total session asplosion.");
-/*session_start();
-$_SESSION["var1"] = "mi texto de la variable";*/
-//header("Location: test.php");
-
 if(isset($_COOKIE["unitel_game"]))
 {
     $game = juego::getById((int) $_COOKIE["unitel_game"]);
@@ -21,12 +16,13 @@ else
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if (isset($_POST["start"]) && isset($_POST["nombre"])) {
-        $game->name = $_POST["nombre"];
-        $game->step = 1;
+        $game->name = $_POST["nombre"]; //Guardo el nombre
+        $game->step = 1; //Paso de preguntas
         $game->save();
 
         setcookie("unitel_game", $game->id_juego, time() + (86400 * 30), "/");
     } else if (isset($_POST["respuesta"])) {
+        //¿Estoy en la última?
         if ($game->last_ask == count($game->test) - 1) {
             $game->step = 2;
 
@@ -35,6 +31,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             setcookie("unitel_game", "", time() - 3600, "/");
             unset($_COOKIE["unitel_game"]);
+        ///¿O me quedan preguntas en el test?
         } else {
             $game->respuestas[$game->last_ask] = $_POST["respuesta"];
             $game->last_ask++;
@@ -65,10 +62,19 @@ function getHTML()
                     <button type="submit" class="btn btn-light btn-lg" name="start">Iniciar Juego</button>
                     </form>
                 </div>
-                </body>';
+            </body>';
     }
     else if ($game->step === 1)
     {
+        //id de la pregunta actual?¿
+        /*$pos = $game->last_ask; //1 (2da pregunta) Puede tomar valores: 0/1/2/3/4/5
+        //Array de id de preguntas -> Nos indica la pregunta por la que vamos
+        $id_pregunta = $game->test[$pos] //Devuelve //Id_Pregunta = 8
+        $pregunta = pregunta::getById($id_pregunta); //Instancio la pregunta 8
+        echo $pregunta->pregunta;
+
+        pregunta::getById($game->test[$game->last_ask])->pregunta*/
+
         echo '<body class="bg-dark text-white">
                 <div class="container py-5 text-center">
                     <h2 class="mb-4">'.pregunta::getById($game->test[$game->last_ask])->pregunta.'</h2>
