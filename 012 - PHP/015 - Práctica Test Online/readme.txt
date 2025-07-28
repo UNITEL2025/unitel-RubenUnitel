@@ -15,3 +15,50 @@ en su última parte ejecutada.
 10) Las partidas se deben almacenar en un archivo plano de texto.
 11) Las preguntas deben estar almacenadas en un archivo txt.
 
+
+LÓGICA DE CLASE PREGUNTA -> FUNCIÓN SAVE
+===========================================================
+1) Tengo id_pregunta?¿
+1.1) Lo tenga -> Por tanto tengo que actualizar
+1.2) Que sea null -> Por tanto, lo tengo que añadir al final
+
+2) Leo todas las preguntas, obtengo un array de cadenas de texto formatedas en JSON
+$items = array(
+	{"id_pregunta":0,"pregunta":"\u00bfEsta es ...",
+	{"id_pregunta":1,"pregunta":"\u00bfEsta es ..."
+);
+
+3) Acciones
+3.1) Que este actualización -> Tengo que buscar la posición de la pregunta en el array
+y sustuir
+Si mi pregunta es la 1 y dispongo de este array:
+$items = array(
+	{"id_pregunta":0,"pregunta":"\u00bfEsta es ...",
+	{"id_pregunta":1,"pregunta":"\u00bfEsta es ..."
+);
+Lo recorro, y cuando encuentre la pregunta con id = 1
+$items[pos] = $this (transformar en JSON);
+3.2) Que sea nueva
+$items[] = $this;
+
+4) Escribo de nuevo el archivo
+file::escribir($items); A esta función se le pasa un array de cadenas JSON
+$items = array(
+	{"id_pregunta":0,"pregunta":"\u00bfEsta es ...",
+	{"id_pregunta":1,"pregunta":"\u00bfEsta es ..."
+);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

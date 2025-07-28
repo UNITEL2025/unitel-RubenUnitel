@@ -105,7 +105,7 @@ class pregunta {
 
     // Obtener una sola pregunta por ID
     public static function getById(int $id): pregunta {
-        foreach (files::read(self::$filename) as $item) { //Recorro array de jesons
+        /*foreach (files::read(self::$filename) as $item) { //Recorro array de jsons
             $obj = json_decode($item); //lo descodifico en objeto estandar
             if ($obj !== null && $obj->id_pregunta == $id) { //Comprobaciones
                 //Los transformo en objeto pregunta y devuelvo la instancia de una pregunta
@@ -116,6 +116,9 @@ class pregunta {
                     $obj->correcta
                 );
             }
+        }*/
+        foreach (self::getAll() as $pregunta) {
+            if ($pregunta->id_pregunta == $id) return $pregunta;
         }
 
         return new pregunta(); // Retorna instancia vacía si no la encuentra
