@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Listado de Clientes</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+  <div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h2>Listado de Clientes</h2>
+      <a href="formulario.html" class="btn btn-success">+ Nuevo Cliente</a>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped align-middle">
+        <thead class="table-dark">
+          <tr>
+            <th>#</th>
+            <th>Nombre</th>
+            <th>Apellidos</th>
+            <th>Teléfono</th>
+            <th>Email</th>
+            <th>Fecha de Creación</th>
+            <th>Última Actualización</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="tabla-clientes">
+          <!-- Filas de ejemplo (puedes generar dinámicamente con JS o desde backend) -->
+          <tr>
+            <td>1</td>
+            <td>Juan</td>
+            <td>Pérez</td>
+            <td>123456789</td>
+            <td>juan@example.com</td>
+            <td>2025-07-01</td>
+            <td>2025-07-20</td>
+            <td>
+              <a href="formulario.html?id=1" class="btn btn-sm btn-primary">Editar</a>
+            </td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>Ana</td>
+            <td>López</td>
+            <td>987654321</td>
+            <td>ana@example.com</td>
+            <td>2025-07-10</td>
+            <td>2025-07-22</td>
+            <td>
+              <a href="formulario.html?id=2" class="btn btn-sm btn-primary">Editar</a>
+            </td>
+          </tr>
+          <!-- Puedes seguir agregando registros -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
