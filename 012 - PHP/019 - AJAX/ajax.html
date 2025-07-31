@@ -1,0 +1,65 @@
+<html>
+<head>
+<script>
+    //Zona de ejecución de JAVASCRIPT
+    //Donde se define la función showHint() a la que llamamos cuando se levanta una tecla
+    function showHint(str) {
+        //Comprobamos la longitud del string, si es cero => no tengo contenido
+        //Si no tengo contenido no puedo comprobar que sugerencia le dare al usuario
+        if (str.length == 0) {
+            //Vacío el input text con una cadena vacía
+            //La línea obtiene el documento completo: document
+            //Con la función getElementById, obtiene el elemento en cuestión
+            //En este caso obtiene el span identificado con el id = txtHint
+            //Mediante innerHTML, modifica el contenido de dentro de la etiqueta
+            //<span>AFECTA AQUÍ</span>
+            document.getElementById("txtHint").innerHTML = "";
+            //Retornamos nada, y se acaba la función
+            return;
+        //En caso contrario, es que tenemos longitud en el string (> 0)
+        } else {
+            //Instanciar un objeto XMLHttpRequest
+            //nos permite comunicarnos con el servidor
+            var xmlhttp = new XMLHttpRequest();
+            //Indica al objeto que cuando este listo ejecute la función
+            xmlhttp.onreadystatechange = function() {
+            //Comprueba que readyState sea 4 y que el status sea 200
+            //El readystate a 4, indica que se ha completado la operación AJAX
+            //El status a 200, indica que el servidor ha devuelto una operación exitosa
+            if (this.readyState == 4 && this.status == 200) {
+                //Modicamos el span con id txtHint
+                //Añadimos la respuesta de la petición
+                //this.responseText es una variable que su valor es la respuesta
+                //de la petición
+                document.getElementById("txtHint").innerHTML = this.responseText;
+            }
+            };
+            //Abrimos la petición AJAX
+            //1er param: Le indicamos que el método que queremos es el GET
+            //2do param: Es la url que queremos ejecutar
+            //3er param: Tipo de conexión, en este caso, asíncrona
+            xmlhttp.open("GET", "gethint.php?q=" + str, true);
+            //Enviamos la petición al servidor
+            xmlhttp.send();
+        }
+    }
+</script>
+</head>
+<body>
+
+<p><b>Start typing a name in the input field below:</b></p>
+<form action="">
+  <label for="fname">First name:</label>
+  <!-- El input tiene un atributo especial: onkeyup
+   Que dispara un evento cuando se levanta una tecla
+   El evento llama a la función showHint de JAVASCRIPT
+   Le pasa como param this.value que es es valor de la tecla: a, b, c...
+   -->
+  <input type="text" id="fname" name="fname" onkeyup="showHint(this.value)">
+</form>
+    <!--El span está vacío, cuando se ejecute la función showHint
+    Mediante JAVASCRIPT añadirá dinamicamente contenido
+    -->
+<p>Suggestions: <span id="txtHint"></span></p>
+</body>
+</html>
