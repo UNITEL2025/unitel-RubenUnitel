@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TPV Táctil - Cobros</title>
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+  <style>
+    body {
+      padding: 20px;
+      background: #f8f9fa;
+    }
+    .btn-producto {
+      width: 100%;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      font-weight: 600;
+    }
+    .num-pad {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 8px !important;
+  width: 100% !important;
+  max-width: 320px; /* opcional para limitar el tamaño máximo */
+  margin: 0 auto; /* centrar si queda más pequeño */
+}
+.num-pad button {
+  width: 100% !important;
+  height: 60px !important;
+  font-size: 1.5rem !important;
+}
+    .cantidad-controls button {
+      width: 30px;
+      height: 30px;
+      padding: 0;
+      font-weight: bold;
+    }
+    .cantidad-controls span {
+      width: 25px;
+      display: inline-block;
+      text-align: center;
+      font-weight: 600;
+    }
+    .detalle-venta table {
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+
+    <div class="d-flex align-items-center justify-content-between mb-4">
+  <button class="btn btn-outline-primary" aria-label="Ir a inicio">
+    <i class="bi bi-house-door-fill"></i>
+  </button>
+  <h1 class="m-0 text-center flex-grow-1">TPV Táctil - Cobros</h1>
+  <div style="width: 38px;"></div> <!-- Espacio para balancear el botón y centrar título -->
+</div>
+
+
+  <div class="container-fluid">
+    <div class="row g-3">
+
+      <!-- Productos (Columna izquierda) -->
+      <div class="col-md-3 col-sm-12" id="productosList" aria-label="Lista de productos">
+        <!-- Los botones de producto se generan con JS -->
+      </div>
+
+      <!-- Detalle de venta (Columna central) -->
+      <div class="col-md-6 col-sm-12 detalle-venta">
+        <h4>Detalle de venta</h4>
+        <table class="table table-striped" aria-label="Detalle de productos añadidos a la venta">
+          <thead>
+            <tr>
+              <th>Producto</th>
+              <th class="text-center">Cantidad</th>
+              <th class="text-end">Importe</th>
+              <th class="text-center">Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="detalleVentaBody">
+            <tr><td colspan="4" class="text-center text-muted fst-italic">No hay productos añadidos</td></tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <th colspan="2" class="text-end">Total:</th>
+              <th id="totalDisplay" class="text-end">0.00 €</th>
+              <th></th>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+
+      <!-- Columna derecha: importe recibido, devolución, teclado y método de pago -->
+      <div class="col-md-3 col-sm-12">
+        <h4 class="mb-3">Importe recibido</h4>
+        <input type="text" id="importeRecibido" class="form-control mb-3" placeholder="0.00" readonly aria-describedby="ayudaImporteRecibido" />
+        <div id="ayudaImporteRecibido" class="form-text mb-4">Usa el teclado para ingresar importe recibido</div>
+
+        <label for="importeDevolver" class="form-label">Importe a devolver</label>
+        <input type="text" id="importeDevolver" class="form-control mb-4" placeholder="0.00" readonly aria-live="polite" />
+
+        <div class="num-pad d-grid gap-2" role="group" aria-label="Teclado numérico para importe recibido" style="grid-template-columns: repeat(3, 60px); display: grid;">
+          <button class="btn btn-outline-secondary" data-key="7">7</button>
+          <button class="btn btn-outline-secondary" data-key="8">8</button>
+          <button class="btn btn-outline-secondary" data-key="9">9</button>
+
+          <button class="btn btn-outline-secondary" data-key="4">4</button>
+          <button class="btn btn-outline-secondary" data-key="5">5</button>
+          <button class="btn btn-outline-secondary" data-key="6">6</button>
+
+          <button class="btn btn-outline-secondary" data-key="1">1</button>
+          <button class="btn btn-outline-secondary" data-key="2">2</button>
+          <button class="btn btn-outline-secondary" data-key="3">3</button>
+
+          <button class="btn btn-outline-secondary" data-key=".">.</button>
+          <button class="btn btn-outline-secondary" data-key="0">0</button>
+          <button class="btn btn-danger" id="clearInput" aria-label="Borrar entrada">C</button>
+        </div>
+
+        <h4 class="mt-4 mb-3">Método de cobro</h4>
+        <div class="payment-methods d-flex flex-column" role="group" aria-label="Botones de método de cobro">
+          <button class="btn btn-success mb-2" id="payCash">
+            <i class="bi bi-cash-stack me-2"></i>Efectivo
+          </button>
+          <button class="btn btn-primary mb-2" id="payCard">
+            <i class="bi bi-credit-card me-2"></i>Tarjeta
+          </button>
+          <button class="btn btn-warning mb-2" id="payOther">
+            <i class="bi bi-wallet2 me-2"></i>Otro
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Bootstrap 5 JS Bundle (Popper + Bootstrap JS) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    const productos = [
+      { id: 1, name: 'Café', price: 1.20 },
+      { id: 2, name: 'Té', price: 1.00 },
+      { id: 3, name: 'Sandwich', price: 3.50 },
+      { id: 4, name: 'Agua', price: 0.80 },
+      { id: 5, name: 'Refresco', price: 1.50 },
+      { id: 6, name: 'Pastel', price: 2.00 }
+    ];
+
+    let ventaItems = [];
+
+    const productosList = document.getElementById('productosList');
+    const detalleVentaBody = document.getElementById('detalleVentaBody');
+    const totalDisplay = document.getElementById('totalDisplay');
+    const importeRecibidoInput = document.getElementById('importeRecibido');
+    const importeDevolverInput = document.getElementById('importeDevolver');
+    const numPadButtons = document.querySelectorAll('.num-pad button[data-key]');
+    const clearInputBtn = document.getElementById('clearInput');
+
+    function renderProductos() {
+      productosList.innerHTML = '';
+      productos.forEach((producto) => {
+        const btn = document.createElement('button');
+        btn.className = 'btn btn-outline-primary btn-producto';
+        btn.setAttribute('type', 'button');
+        btn.setAttribute('aria-label', `Añadir ${producto.name} por ${producto.price.toFixed(2)} euros`);
+        btn.innerHTML = `
+          <span>${producto.name}</span>
+          <span>${producto.price.toFixed(2)} €</span>
+        `;
+        btn.onclick = () => {
+          const idx = ventaItems.findIndex(item => item.id === producto.id);
+          if (idx > -1) {
+            ventaItems[idx].quantity++;
+          } else {
+            ventaItems.push({...producto, quantity: 1});
+          }
+          actualizarDetalle();
+        };
+        productosList.appendChild(btn);
+      });
+    }
+
+    function actualizarDetalle() {
+      detalleVentaBody.innerHTML = '';
+      if (ventaItems.length === 0) {
+        detalleVentaBody.innerHTML = '<tr><td colspan="4" class="text-center text-muted fst-italic">No hay productos añadidos</td></tr>';
+        totalDisplay.textContent = '0.00 €';
+        importeDevolverInput.value = '';
+        return;
+      }
+
+      let total = 0;
+      ventaItems.forEach((item, index) => {
+        total += item.price * item.quantity;
+        const importe = item.price * item.quantity;
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${item.name}</td>
+          <td class="text-center">
+            <div class="cantidad-controls" role="group" aria-label="Control de cantidad para ${item.name}">
+              <button class="btn btn-sm btn-outline-secondary" aria-label="Disminuir cantidad" data-action="decrease" data-index="${index}">−</button>
+              <span aria-live="polite" aria-atomic="true">${item.quantity}</span>
+              <button class="btn btn-sm btn-outline-secondary" aria-label="Incrementar cantidad" data-action="increase" data-index="${index}">+</button>
+            </div>
+          </td>
+          <td class="text-end">${importe.toFixed(2)} €</td>
+          <td class="text-center">
+            <button class="btn btn-danger btn-sm" aria-label="Eliminar ${item.name}" data-action="remove" data-index="${index}">
+              <i class="bi bi-trash"></i>
+            </button>
+          </td>
+        `;
+        detalleVentaBody.appendChild(tr);
+      });
+
+      totalDisplay.textContent = total.toFixed(2) + ' €';
+
+      if (importeRecibidoInput.value) calcularDevolucion();
+
+      detalleVentaBody.querySelectorAll('button').forEach(button => {
+        const action = button.dataset.action;
+        const index = Number(button.dataset.index);
+
+        button.onclick = () => {
+          if (action === 'increase') {
+            ventaItems[index].quantity++;
+          } else if (action === 'decrease') {
+            if (ventaItems[index].quantity > 1) {
+              ventaItems[index].quantity--;
+            } else {
+              ventaItems.splice(index, 1);
+            }
+          } else if (action === 'remove') {
+            ventaItems.splice(index, 1);
+          }
+          actualizarDetalle();
+        };
+      });
+    }
+
+    function calcularDevolucion() {
+      let recibido = parseFloat(importeRecibidoInput.value);
+      if (isNaN(recibido)) recibido = 0;
+
+      let total = ventaItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
+      let devolver = recibido - total;
+      importeDevolverInput.value = devolver >= 0 ? devolver.toFixed(2) : '0.00';
+    }
+
+    numPadButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        if (button.dataset.key === '.' && importeRecibidoInput.value.includes('.')) return;
+        importeRecibidoInput.value += button.dataset.key;
+        calcularDevolucion();
+      });
+    });
+
+    clearInputBtn.addEventListener('click', () => {
+      importeRecibidoInput.value = '';
+      importeDevolverInput.value = '';
+    });
+
+    document.getElementById('payCash').addEventListener('click', () => alert('Pago en efectivo seleccionado.'));
+    document.getElementById('payCard').addEventListener('click', () => alert('Pago con tarjeta seleccionado.'));
+    document.getElementById('payOther').addEventListener('click', () => alert('Otro método de pago seleccionado.'));
+
+    renderProductos();
+  </script>
+</body>
+</html>

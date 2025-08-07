@@ -36,6 +36,7 @@ class bd {
             $sql = "CREATE TABLE IF NOT EXISTS clientes (
                 id_cliente INT(10) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
                 notas VARCHAR(500) DEFAULT '',
+                asociado_id INT(10) UNSIGNED,
                 fecha TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
             )";
             $conn->exec($sql);
@@ -71,12 +72,18 @@ class bd {
 
             $sql = "CREATE TABLE IF NOT EXISTS ventas (
                 id_venta INT(10) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-                referencia INT(10) NOT NULL,
                 fecha TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 cliente_id INT(10) UNSIGNED,
+                empleado_id INT(10) UNSIGNED,
+                metodo_pago VARCHAR(25),
                 CONSTRAINT fk2_cliente_id
                     FOREIGN KEY (cliente_id)
                     REFERENCES ".self::$db.".clientes (id_cliente)
+                    ON DELETE SET NULL
+                    ON UPDATE NO ACTION,
+                CONSTRAINT fk2_empleado_id
+                    FOREIGN KEY (empleado_id)
+                    REFERENCES ".self::$db.".empleados (id_empleado)
                     ON DELETE SET NULL
                     ON UPDATE NO ACTION
             )";
@@ -97,6 +104,18 @@ class bd {
                     FOREIGN KEY (producto_id)
                     REFERENCES ".self::$db.".productos (id_producto)
                     ON DELETE SET NULL
+                    ON UPDATE NO ACTION
+            )";
+            $conn->exec($sql);
+
+            $sql = "CREATE TABLE IF NOT EXISTS detalle_ref (
+                id_detalle_ref INT(10) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                detalle_id INT(10) UNSIGNED NOT NULL,
+                referencia INT(10) NOT NULL,
+                CONSTRAINT fk1_detalle_id
+                    FOREIGN KEY (detalle_id)
+                    REFERENCES ".self::$db.".ventas_detalle (id_venta_detalle)
+                    ON DELETE CASCADE
                     ON UPDATE NO ACTION
             )";
             $conn->exec($sql);
@@ -123,8 +142,112 @@ class bd {
             return "Error! Conexión fallida: " . $e->getMessage();
         }
     }
+
+    public static function getAll(string $table) {
+        $sql = 'SELECT * FROM '.$table;
+
+        $conn = bd::get();
+        if ($conn instanceof PDO) {
+            $stmt = $conn->prepare($sql); 
+            $stmt->execute();
+            return $stmt->fetchAll();
+        }
+        else {
+            return null;
+        }
+    }
+
+    public static function getById(string $table, int $id) {
+        $id_tipo = "";
+        switch ($table) {
+            case 'asociados':
+                $id_tipo = "id_asociado";
+                break;
+            
+            case 'clientes':
+                $id_tipo = "id_cliente";
+                break;
+
+            case 'detalle_ref':
+                $id_tipo = "id_detalle_ref";
+                break;
+            
+            case 'empleados':
+                $id_tipo = "id_empleado";
+                break;
+
+            case 'productos':
+                $id_tipo = "id_producto";
+                break;
+
+            case 'ventas_detalle':
+                $id_tipo = "id_venta_detalle";
+                break;
+        }
+        $sql = 'SELECT * FROM '.$table.' WHERE '.$id_tipo.' = :id';
+
+        $conn = bd::get();
+        if ($conn instanceof PDO) {
+            $stmt = $conn->prepare($sql); 
+            $stmt->bindParam(':id', $id);
+            $stmt->execute();
+            return $stmt->fetchAll();
+        }
+        else {
+            return null;
+        }
+    }
+
+    public static function deleteById(string $table, int $id) : bool {
+        $sql = 'DELETE FROM '.$table.' WHERE id = :id';
+
+        $conn = bd::get();
+        if ($conn instanceof PDO) {
+            $stmt = $conn->prepare($sql); 
+            $stmt->bindParam(':id', $id);
+            return $stmt->execute();
+        }
+        else {
+            return null;
+        }
+    }
+
+    public static function deleteAll(string $table) {
+        $sql = 'DELETE FROM '.$table;
+
+        $conn = bd::get();
+        if ($conn instanceof PDO) {
+            $stmt = $conn->prepare($sql); 
+            return $stmt->execute();
+        }
+        else {
+            return null;
+        }
+    }
+
+    public static function getTablas() {
+        $sql = 'SELECT table_name
+                FROM information_schema.tables
+                WHERE table_type="BASE TABLE" AND table_schema = "'.self::$db.'"';
+
+        $conn = bd::get();
+        if ($conn instanceof PDO) {
+            $stmt = $conn->prepare($sql); 
+            $stmt->execute();
+            $items = $stmt->fetchAll();
+
+            $salida = array();
+            foreach ($items as $item) {
+                $salida[] = $item["table_name"];
+            }
+            return $salida;
+        }
+        else {
+            return null;
+        }
+    }
 }
 
 bd::check();
-bd::init();
+//bd::init();
 ?>
