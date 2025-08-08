@@ -123,7 +123,7 @@
 
         <h4 class="mt-4 mb-3">Método de cobro</h4>
         <div class="payment-methods d-flex flex-column" role="group" aria-label="Botones de método de cobro">
-          <button class="btn btn-success mb-2" id="payCash">
+          <button class="btn btn-success mb-2" id="payCash" onclick="pago();">
             <i class="bi bi-cash-stack me-2"></i>Efectivo
           </button>
           <button class="btn btn-primary mb-2" id="payCard">
@@ -271,6 +271,10 @@
     document.getElementById('payOther').addEventListener('click', () => alert('Otro método de pago seleccionado.'));
 
     renderProductos();
+
+    function pago() {
+      alert("se hace el cobro");
+    }
   </script>
 </body>
 </html>

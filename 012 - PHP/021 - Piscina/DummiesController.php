@@ -186,7 +186,7 @@ for ($i=0; $i < 1000; $i++) {
 //Inicio: 2025-06-20
 //Fin: 2025-09-04
 //IMPORTANTE!! Ajustar el save (UPDATE) de ventas con el campo fecha
-$ventas = venta::getAll();
+/*$ventas = venta::getAll();
 
 $start = DateTime::createFromFormat('Y-m-d', '2025-06-20');
 $end = DateTime::createFromFormat('Y-m-d', '2025-09-04');
@@ -198,12 +198,34 @@ $i = 0;
 while($start < $end) {
     for ($j=0; $j < rand(8, 12); $j++) { 
         
+        $start->setTime(rand(12, 20), rand(0, 59), rand(0, 59));
+
         $venta = $ventas[$i];
-        $venta->fecha = $start->format("Y-m-d");
+        $venta->fecha = $start->format("Y-m-d H:i:s");
         $venta->save();
         $i++;
     }
     
     $start->modify('+1 day');
-}
+}*/
+
+//Actualizar fechas de asociados
+/*$items = asociado::getAll();
+
+$start = DateTime::createFromFormat('Y-m-d', '2025-06-20');
+$end = DateTime::createFromFormat('Y-m-d', '2025-09-04');
+
+$i = 0;
+while($start < $end) {
+    for ($j=0; $j < rand(3, 5); $j++) { 
+        if (isset($items[$i])) {
+            $item = $items[$i];
+            $item->fecha = $start->format("Y-m-d");
+            $item->save();
+            $i++;
+        }
+    }
+    
+    $start->modify('+1 day');
+}*/
 ?>

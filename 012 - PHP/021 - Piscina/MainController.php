@@ -15,6 +15,11 @@ require_once "classes/ventas_detalle.php";
 //Setear los datos dummies
 class MainController {
     public $name; //Nombre público de la página para el usuario
+    public $empresa;
+
+    public function __construct() {
+        $this->empresa = "Piscina Talavera";
+    }
 
     public function mostrarError(string $error) {
         echo '<!DOCTYPE html>

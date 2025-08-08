@@ -103,7 +103,8 @@ class asociado {
                 nombre=:nombre,
                 dni=:dni,
                 notas=:notas,
-                cliente_id=:cliente_id
+                cliente_id=:cliente_id,
+                fecha=:fecha
                 WHERE id_asociado=:id_asociado';
 
             $stmt = $conn->prepare($sql); 
@@ -113,6 +114,7 @@ class asociado {
             $stmt->bindParam(':dni', $this->dni);
             $stmt->bindParam(':notas', $this->notas);
             $stmt->bindParam(':cliente_id', $this->cliente_id);
+            $stmt->bindParam(':fecha', $this->fecha);
             
             $stmt->execute();
         }
