@@ -16,6 +16,7 @@ class ListController extends MainController {
     /*$headers["tabla1"][] = "Campo 1";
     $headers["tabla1"][] = "Campo 2";
     $headers["tabla2"][] = "Campo 1";...*/
+    
 
     //Constructor
     //Asignamos la tabla
@@ -46,7 +47,12 @@ class ListController extends MainController {
 
                 case 'ventas':
                     $this->items = venta::getAll($this->tabla);
-                    $this->newController = "VentaController.php?action=nuevo";
+                    $this->newController = null;
+                    break;
+
+                case 'asociados':
+                    $this->items = asociado::getAll($this->tabla);
+                    $this->newController = "AsociadoController.php?action=nuevo";
                     break;
             }
         }
@@ -85,6 +91,12 @@ class ListController extends MainController {
         $this->headers["ventas"][] = "Total";
         $this->headers["ventas"][] = "Fecha";
         $this->headers["ventas"][] = "Acciones";
+
+        $this->headers["asociados"][] = "ID";
+        $this->headers["asociados"][] = "Nombre";
+        $this->headers["asociados"][] = "DNI";
+        $this->headers["asociados"][] = "Fecha";
+        $this->headers["asociados"][] = "Acciones";
     }
 
     //Devuelve el HTML de las cabeceras de las tablas -> $headers
@@ -120,6 +132,32 @@ class ListController extends MainController {
                                         </svg>
                                     </a>
                                     <a href="ClienteController.php?action=eliminar&id='.$item->id_cliente.'" class="btn btn-sm btn-danger">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                                        <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0"/>
+                                        </svg>
+                                    </a>
+                                </td>';
+                                $return .= "</tr>";
+                    break;
+                
+                case 'asociados':
+                    $return .= "<tr>";
+                    $return .= '<td>'.$item->id_asociado.'</td>';
+                    $return .= '<td>'.$item->nombre.'</td>';
+                    $return .= '<td>'.$item->dni.'</td>';
+                    $return .= '<td>'.date("d/m/Y", strtotime($item->fecha)).'</td>';
+                    $return .= '<td>
+                                    <a href="AsociadoController.php?action=editar&id='.$item->id_asociado.'" class="btn btn-sm btn-primary">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16">
+                                        <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.5.5 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11z"/>
+                                        </svg>
+                                    </a>
+                                    <a href="ClienteController.php?action=editar&id='.$item->cliente_id.'" class="btn btn-sm btn-primary">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
+                                        <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+                                        </svg>
+                                    </a>
+                                    <a href="AsociadoController.php?action=eliminar&id='.$item->id_asociado.'" class="btn btn-sm btn-danger">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
                                         <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0"/>
                                         </svg>
@@ -246,16 +284,128 @@ class ListController extends MainController {
     public function check() : bool {
         return in_array($this->tabla, bd::getTablas());
     }
+
+    public function getLinkNew() {
+        if ($this->newController != null)
+        {
+            return '<a href="'.$this->newController.'" class="btn btn-success d-flex align-items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square" viewBox="0 0 16 16">
+                        <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
+                        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+                    </svg>
+                </a>';
+        }
+        return "";
+    }
+
+    public function toExport() {
+        $return = array(
+            "data" => array(),
+            "len" => 0
+        );
+
+        switch ($this->tabla) {
+            case 'clientes':
+                $return["len"] = array(15, 80, 30, 20, 30);
+                foreach ($this->items as $item) {
+                    $return["data"][] = array(
+                        $item->id_cliente,
+                        $item->getTitular()->nombre,
+                        $item->getTitular()->dni,
+                        count($item->asociados),
+                        date("d/m/Y", strtotime($item->fecha))
+                    );
+                }
+                break;
+
+            case 'empleados':
+                $return["len"] = array(15, 80, 30, 30, 30);
+                foreach ($this->items as $item) {
+                    $return["data"][] = array(
+                        $item->id_empleado,
+                        $item->nombre,
+                        $item->dni,
+                        $item->telefono,
+                        $item->dni
+                    );
+                }
+                break;
+
+            case 'productos':
+                $return["len"] = array(15, 80, 20, 20, 30, 50, 50);
+                foreach ($this->items as $item) {
+                    $return["data"][] = array(
+                        $item->id_producto,
+                        $item->nombre,
+                        ($item->tipo == false) ? "Ticket":"Abono",
+                        $item->ref_ini,
+                        date("d/m/Y", strtotime($item->fecha)),
+                        date("d/m/Y H:i:s", strtotime($item->fecha_ini)),
+                        date("d/m/Y H:i:s", strtotime($item->fecha_fin))
+                    );
+                }
+                break;
+
+            case 'ventas':
+                $return["len"] = array(15, 70, 70, 40, 20, 50);
+                foreach ($this->items as $item) {
+                    $cliente_nombre = "";
+                    if ($item->cliente_id != null) {
+                        $cliente = cliente::getById($item->cliente_id);
+                        if ($cliente != null) $cliente_nombre = $cliente->getTitular()->nombre;
+                    }
+                    $empleado_nombre = "";
+                    if ($item->empleado_id != null) {
+                        $empleado = empleado::getById($item->empleado_id);
+                        if ($empleado != null) $empleado_nombre = $empleado->nombre;
+                        else $empleado_nombre .= 'Desconocido';    
+                    }
+
+                    $return["data"][] = array(
+                        $item->id_venta,
+                        $cliente_nombre,
+                        $empleado_nombre,
+                        $item->metodo_pago,
+                        number_format($item->getTotal(), 2, ",", ".").' €',
+                        date("d/m/Y H:i:s", strtotime($item->fecha))
+                    );
+                }
+                break;
+
+            case 'asociados':
+                $return["len"] = array(15, 80, 30, 30);
+                foreach ($this->items as $item) {
+                        $return["data"][] = array(
+                        $item->id_asociado,
+                        $item->nombre,
+                        $item->dni,
+                        date("d/m/Y", strtotime($item->fecha))
+                    );
+                }
+                break;
+        }
+
+        return $return;
+    }
 }
 
 //Nos llegará una $_POST con la tabla que debemos mostrar
 //Simulamos un post en un variable para poder realizar pruebas
-//$tabla = $_POST['tabla'];
+$tabla = $_GET['tabla'];
+$download = (isset($_GET['download'])) ? TRUE:FALSE;
 //$tabla = "clientes";
 //$tabla = "empleados";
 //$tabla = "productos";
-$tabla = "ventas";
+//$tabla = "ventas";
 
+if (isset($tabla) && $download == TRUE) {
+    $list = new ListController($tabla);
+    $pdf = new PdfController();
+    $header = $list->headers[$list->tabla];
+    array_pop($header);
+    $export = $list->toExport();
+    $pdf->create($list->name, $header, $export["data"], $export["len"]);
+}
 //Si existe la variable $_POST -> Seguimos para mostrar el HTML
 //Si NO existe, no mostramos nada (por defecto el controlador se debe ejecutar siempre)
 //Creamos una instancia de ListController -> new ListController();
@@ -294,24 +444,19 @@ if (isset($tabla)) {
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
                                     <li><a class="dropdown-item" href="#">Excel</a></li>
-                                    <li><a class="dropdown-item" href="#">PDF</a></li>
+                                    <li><a class="dropdown-item" target="_blank" href="ListController.php?download=true&tabla='.$list->tabla.'">PDF</a></li>
                                 </ul>
                             </div>
 
                             <!-- Botón Home -->
-                            <a href="MainController.php" class="btn btn-success d-flex align-items-center">
+                            <a href="DsbController.php" class="btn btn-success d-flex align-items-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house" viewBox="0 0 16 16">
                                     <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5z"/>
                                 </svg>
                             </a>
 
                             <!-- Botón Agregar -->
-                            <a href="'.$list->newController.'" class="btn btn-success d-flex align-items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square" viewBox="0 0 16 16">
-                                    <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
-                                    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
-                                </svg>
-                            </a>
+                            '.$list->getLinkNew().'
                         </div>
                     </div>
 

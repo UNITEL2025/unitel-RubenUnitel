@@ -12,10 +12,12 @@ require_once "classes/referencia.php";
 require_once "classes/venta.php";
 require_once "classes/ventas_detalle.php";
 
+require_once "PdfController.php";
+
 //Setear los datos dummies
 class MainController {
     public $name; //Nombre público de la página para el usuario
-    public $empresa;
+    public $empresa; //Nombre público de la empresa
 
     public function __construct() {
         $this->empresa = "Piscina Talavera";

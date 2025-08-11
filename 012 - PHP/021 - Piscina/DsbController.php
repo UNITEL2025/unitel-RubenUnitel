@@ -1,24 +1,21 @@
 <?php
 #DbsController.php
 
-//Antes de este controlador hay que hacer el MainController
-//Ya que ListController depende del superior (MainController)
-//En cliente.php hay que crear una función getTitular() que devuelva un objeto "asociado"
-//El HTML del listado está en la carpeta "plantillas" del proyecto
-
 require_once "MainController.php";
 
 class DbsController extends MainController {
 
+    //Devuelve el número total de ventas
     public function getVentas() {
-        $return = "???";
+        $return = "???"; //Definimos variable de retorno
 
-        $start = new \DateTime();
-        $start->setTime(0, 0, 0);
+        $start = new \DateTime(); //Definimos la fecha y hora de hoy (fecha de FIN)
+        $start->setTime(0, 0, 0); //Modificamos el datetime: 08/08/2025 09:31:00 => 08/08/2025 00:00:00
 
-        $end = new \DateTime();
-        $end->setTime(23, 59, 59);
+        $end = new \DateTime(); //Definimos la fecha y hora de hoy (fecha de FIN)
+        $end->setTime(23, 59, 59); //Modificamos la hora
 
+        //Montar el sql
         $sql = 'SELECT SUM(vd.ctd) as total 
                 FROM ventas_detalle AS vd 
                 LEFT JOIN ventas AS v ON v.id_venta = vd.venta_id 
@@ -40,7 +37,8 @@ class DbsController extends MainController {
             $this->mostrarError("ERROR! No se puede conectar con la Base de Datos");
         }
     }
-
+    
+    //Devuelve el número de asociados en el año en curso (2025)
     public function getAbonados() {
         $return = "???";
 
@@ -67,6 +65,8 @@ class DbsController extends MainController {
         }
     }
 
+    //Devuelve el número de personas que han entrado en el día
+    //TODO
     public function getAforo() {
         return "TODO...";
         $return = "???"; //TODO
@@ -92,6 +92,7 @@ class DbsController extends MainController {
         }
     }
 
+    //Devuelve el total de ventas realizadas en el día
     public function getImporte() {
         $return = "???";
 
@@ -123,11 +124,12 @@ class DbsController extends MainController {
         }
     }
 
+    //Gráfica: Devuelve las ventas del día, agrupadas por horas
     public function getVentasDia() {
         //return "[20, 35, 40, 50, 60, 80, 75, 70, 60, 100]";
-        $return = array();
+        $return = array(); //Defino un array para la salida
 
-        $date = new \DateTime();
+        $date = new \DateTime(); //Defino la fecha
 
         $sql = 'SELECT 
                     HOUR(fecha) AS hora,
@@ -160,6 +162,11 @@ class DbsController extends MainController {
         else {
             $this->mostrarError("ERROR! No se puede conectar con la Base de Datos");
         }
+    }
+
+    //Gráfica: Devuelve el aforo del día, agrupado por horas
+    public function getAforoDia() {
+        return "[]";
     }
 }
 
@@ -236,13 +243,19 @@ echo '<!DOCTYPE html>
                 <a class="nav-link" href="ListController.php?tabla=ventas">Ventas</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link active" href="ListController.php?tabla=clientes">Clientes</a>
+                <a class="nav-link" href="ListController.php?tabla=clientes">Clientes</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="ListController.php?tabla=asociados">Asociados</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="ListController.php?tabla=productos">Productos</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="ListController.php?tabla=empleados">Empleados</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Informes</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="#">Configuración</a>
@@ -323,7 +336,7 @@ echo '<!DOCTYPE html>
         const horas = ["12:00H", "13:00H", "14:00H", "15:00H", "16:00H", "17:00H", "18:00H", "19:00H", "20:00H", "21:00H"];
 
         const ventasData = '.$controller->getVentasDia().';
-        const aforoData = [10, 15, 25, 30, 50, 55, 60, 70, 65, 45];
+        const aforoData = '.$controller->getAforoDia().';
 
         const ctxVentas = document.getElementById("ventasChart").getContext("2d");
         const ventasChart = new Chart(ctxVentas, {

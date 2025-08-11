@@ -198,10 +198,10 @@ $i = 0;
 while($start < $end) {
     for ($j=0; $j < rand(8, 12); $j++) { 
         
-        $start->setTime(rand(12, 20), rand(0, 59), rand(0, 59));
+        $start->setTime(rand(12, 20), rand(0, 59), rand(0, 59));//NUEVA
 
         $venta = $ventas[$i];
-        $venta->fecha = $start->format("Y-m-d H:i:s");
+        $venta->fecha = $start->format("Y-m-d H:i:s");//MODIFICADA
         $venta->save();
         $i++;
     }
