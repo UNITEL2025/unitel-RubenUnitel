@@ -66,14 +66,14 @@ class DbsController extends MainController {
     }
 
     //Devuelve el número de personas que han entrado en el día
-    //TODO
     public function getAforo() {
-        return "TODO...";
-        $return = "???"; //TODO
+        $return = "???";
 
         $date = new \DateTime();
 
-        $sql = '';
+        $sql = 'SELECT sum(a.ctd) as total 
+                FROM aforos AS a 
+                WHERE DATE(fecha) = "'.$date->format("Y-m-d").'";';
 
         $conn = bd::get();
         if ($conn instanceof PDO) {
@@ -166,7 +166,40 @@ class DbsController extends MainController {
 
     //Gráfica: Devuelve el aforo del día, agrupado por horas
     public function getAforoDia() {
-        return "[]";
+        //return "[20, 35, 40, 50, 60, 80, 75, 70, 60, 100]";
+        $return = array(); //Defino un array para la salida
+
+        $date = new \DateTime(); //Defino la fecha
+        $sql = 'SELECT 
+                    HOUR(fecha) AS hora,
+                    SUM(a.ctd) AS total
+                FROM aforos AS a
+                WHERE fecha BETWEEN "'.$date->format("Y-m-d").' 00:00:00" AND "'.$date->format("Y-m-d").' 23:59:59" '.
+                'GROUP BY HOUR(fecha)
+                ORDER BY hora;';
+
+        $conn = bd::get();
+        if ($conn instanceof PDO) {
+            $stmt = $conn->prepare($sql); 
+            $stmt->execute();
+            $items = $stmt->fetchAll();
+
+            for ($i=12; $i <= 21; $i++) {
+                $return[$i] = 0;
+
+                foreach ($items as $item) {
+                    if ((int) $item["hora"] == $i)
+                    {
+                        $return[$i] = $item["total"];
+                    }
+                }
+            }
+
+            return "[".implode(",", $return)."]";
+        }
+        else {
+            $this->mostrarError("ERROR! No se puede conectar con la Base de Datos");
+        }
     }
 }
 

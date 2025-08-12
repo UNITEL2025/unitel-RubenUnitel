@@ -9,6 +9,7 @@ require_once "classes/producto.php";
 require_once "classes/venta.php";
 require_once "classes/ventas_detalle.php";
 require_once "classes/referencia.php";
+require_once "classes/aforo.php";
 
 //Empleados
 /*for ($i=0; $i < 5; $i++) { 
@@ -228,4 +229,45 @@ while($start < $end) {
     
     $start->modify('+1 day');
 }*/
+
+//Añadir aforo
+//El aforo debe ir en consecuencia con las ventas
+$ventas = venta::getAll(); //Obtengo las ventas
+foreach ($ventas as $venta) { //Itero las ventas
+    foreach ($venta->detalles as $detalle) { //Dentro cada ventas, itero sus detalles
+        $producto = producto::getById($detalle->producto_id); //Qué producto tengo?
+        
+        //Si es ticket -> Añadimos el aforo según la ctd
+        if ($producto->tipo == 0)
+        {  
+            $item = new aforo(
+                null,
+                $detalle->ctd,
+                $venta->fecha
+            );
+        
+            $item->save();
+        }
+        //Si es abono, nos inventamos en función al máximo de asociados
+        //Para no complicar, los abonos de 20 baños no los tenemos en cuenta a la hora de crear el aforo
+        else {
+            $start = DateTime::createFromFormat('Y-m-d H:i:s', $venta->fecha);
+            $end = DateTime::createFromFormat('Y-m-d', '2025-09-04');
+
+            $cliente = cliente::getById($venta->cliente_id);
+
+            while($start < $end) {
+                
+                $item = new aforo(
+                    null,
+                    rand(0, count($cliente->asociados)),
+                    $start->format("Y-m-d")
+                );
+                $item->save();
+
+                $start->modify('+1 day');
+            }
+        }
+    }
+}
 ?>

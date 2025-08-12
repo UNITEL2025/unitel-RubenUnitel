@@ -126,8 +126,6 @@ class PdfController extends FPDF {
     // Tabla simple
     public function BasicTable($titulo, $header, $data)
     {
-        
-        //var_dump();die();
         //Título
         $this->SetFont('Arial', 'B', 16);
         $this->Cell(20,10,mb_convert_encoding($titulo, "ISO-8859-1"),0);

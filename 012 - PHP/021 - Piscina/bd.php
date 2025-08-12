@@ -120,6 +120,13 @@ class bd {
             )";
             $conn->exec($sql);
 
+            $sql = "CREATE TABLE IF NOT EXISTS aforos (
+                id_aforo INT(10) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                ctd INT(10) DEFAULT 1,
+                fecha TIMESTAMP
+            )";
+            $conn->exec($sql);
+
             return true;
         } catch(PDOException $e) {
             return "Error! Conexión fallida: " . $e->getMessage();
@@ -158,33 +165,8 @@ class bd {
     }
 
     public static function getById(string $table, int $id) {
-        $id_tipo = "";
-        switch ($table) {
-            case 'asociados':
-                $id_tipo = "id_asociado";
-                break;
-            
-            case 'clientes':
-                $id_tipo = "id_cliente";
-                break;
-
-            case 'detalle_ref':
-                $id_tipo = "id_detalle_ref";
-                break;
-            
-            case 'empleados':
-                $id_tipo = "id_empleado";
-                break;
-
-            case 'productos':
-                $id_tipo = "id_producto";
-                break;
-
-            case 'ventas_detalle':
-                $id_tipo = "id_venta_detalle";
-                break;
-        }
-        $sql = 'SELECT * FROM '.$table.' WHERE '.$id_tipo.' = :id';
+        
+        $sql = 'SELECT * FROM '.$table.' WHERE '.self::getTipo($table).' = :id';
 
         $conn = bd::get();
         if ($conn instanceof PDO) {
@@ -199,7 +181,7 @@ class bd {
     }
 
     public static function deleteById(string $table, int $id) : bool {
-        $sql = 'DELETE FROM '.$table.' WHERE id = :id';
+        $sql = 'DELETE FROM '.$table.' WHERE '.self::getTipo($table).' = :id';
 
         $conn = bd::get();
         if ($conn instanceof PDO) {
@@ -245,6 +227,44 @@ class bd {
         else {
             return null;
         }
+    }
+
+    public static function getTipo(string $table) {
+        $id_tipo = "";
+        switch ($table) {
+            case 'asociados':
+                $id_tipo = "id_asociado";
+                break;
+            
+            case 'clientes':
+                $id_tipo = "id_cliente";
+                break;
+
+            case 'detalle_ref':
+                $id_tipo = "id_detalle_ref";
+                break;
+            
+            case 'empleados':
+                $id_tipo = "id_empleado";
+                break;
+
+            case 'productos':
+                $id_tipo = "id_producto";
+                break;
+
+            case 'ventas_detalle':
+                $id_tipo = "id_venta_detalle";
+                break;
+
+            case 'ventas':
+                $id_tipo = "id_venta";
+                break;
+
+            case 'aforos':
+                $id_tipo = "id_aforo";
+                break;
+        }
+        return $id_tipo;
     }
 }
 

@@ -63,12 +63,12 @@ class asociado {
             if (!empty($items))
             {
                 return new asociado(
-                    $item["id_asociado"],
-                    $item["nombre"],
-                    $item["dni"],
-                    $item["notas"],
-                    $item["fecha"],
-                    $item["cliente_id"]
+                    $items[0]["id_asociado"],
+                    $items[0]["nombre"],
+                    $items[0]["dni"],
+                    $items[0]["notas"],
+                    $items[0]["fecha"],
+                    $items[0]["cliente_id"]
                 );
             }
             else {
@@ -77,7 +77,7 @@ class asociado {
         }
     }
 
-    public function deleteById() {
+    public function delete() {
         return bd::deleteById(self::$table, $this->id_asociado);
     }
 
@@ -96,6 +96,9 @@ class asociado {
             $stmt->bindParam(':notas', $this->notas);
             $stmt->bindParam(':cliente_id', $this->cliente_id);
             $stmt->execute(); //Ejecuto
+
+            $last_id = $conn->lastInsertId(); //Necesitamos el último id
+            $this->id_asociado = $last_id;
         }
         //Actualización
         else {
@@ -150,6 +153,14 @@ class asociado {
             return null;
         }
     }
+
+    public function esTitular() {
+        if ($this->cliente_id != null) {
+            $cliente = cliente::getById($this->cliente_id);
+            if ($this->id_asociado == $cliente->asociado_id) return true;
+        }
+        return false;
+    }        
 }
 
 ?>

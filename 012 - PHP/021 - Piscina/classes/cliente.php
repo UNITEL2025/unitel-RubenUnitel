@@ -73,7 +73,7 @@ class cliente {
         }
     }
 
-    public function deleteById() {
+    public function delete() {
         return bd::deleteById(self::$table, $this->id_cliente);
     }
 
@@ -90,6 +90,7 @@ class cliente {
             $stmt->bindParam(':notas', $this->notas);
             $stmt->execute(); //Ejecuto
             $last_id = $conn->lastInsertId(); //Necesitamos el último id
+            $this->id_cliente = $last_id;
             
             foreach ($this->asociados as $asociado) {
                 $asociado->cliente_id = $last_id;
@@ -135,7 +136,30 @@ class cliente {
                 return $asociado;
             }
         }
+        return null;
         //Cómo usarla? => $cliente->getTitular()->nombre;
+    }
+
+    public function getTitularNombre() {
+        if (count($this->asociados) > 0) {
+            $titular = $this->getTitular();
+            if ($titular == null) return "";
+            else return $titular->nombre;
+        }
+        else {
+            return "";
+        }       
+    }
+
+    public function getTitularDni() {
+        if (count($this->asociados) > 0) {
+            $titular = $this->getTitular();
+            if ($titular == null) return "";
+            else return $titular->dni;
+        }
+        else {
+            return "";
+        }       
     }
 }
 

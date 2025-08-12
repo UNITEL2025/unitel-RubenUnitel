@@ -68,12 +68,12 @@ class venta {
             if (!empty($items))
             {
                 return new venta(
-                    $item["id_venta"],
-                    $item["fecha"],
-                    $item["cliente_id"],
-                    $item["empleado_id"],
-                    $item["metodo_pago"],
-                    self::getDetalles($item["id_venta"])
+                    $items[0]["id_venta"],
+                    $items[0]["fecha"],
+                    $items[0]["cliente_id"],
+                    $items[0]["empleado_id"],
+                    $items[0]["metodo_pago"],
+                    self::getDetalles($items[0]["id_venta"])
                 );
             }
             else {

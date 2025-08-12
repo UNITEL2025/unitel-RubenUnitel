@@ -11,6 +11,7 @@ require_once "classes/producto.php";
 require_once "classes/referencia.php";
 require_once "classes/venta.php";
 require_once "classes/ventas_detalle.php";
+require_once "classes/aforo.php";
 
 require_once "PdfController.php";
 
@@ -18,6 +19,8 @@ require_once "PdfController.php";
 class MainController {
     public $name; //Nombre público de la página para el usuario
     public $empresa; //Nombre público de la empresa
+    public $back;
+    public $obj;
 
     public function __construct() {
         $this->empresa = "Piscina Talavera";
@@ -49,6 +52,17 @@ class MainController {
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
             </body>
             </html>';
+    }
+
+    public function msg(string $tipo, string $txt) {
+        echo '<!-- Alertas -->
+            <div id="alert-container">
+                <div class="alert alert-'.$tipo.' alert-dismissible fade show mt-3" role="alert">
+                '.$txt.'
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+        </div>';
     }
 }
 ?>
