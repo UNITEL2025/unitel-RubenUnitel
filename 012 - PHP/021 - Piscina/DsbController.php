@@ -270,7 +270,7 @@ echo '<!DOCTYPE html>
 
         <ul class="nav flex-column mb-4">
             <li class="nav-item">
-                <a class="nav-link" href="CajaController.php?">TPV</a>
+                <a class="nav-link" href="TpvController.php?">TPV</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="ListController.php?tabla=ventas">Ventas</a>

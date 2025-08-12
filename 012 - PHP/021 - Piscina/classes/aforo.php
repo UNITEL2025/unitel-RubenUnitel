@@ -77,7 +77,8 @@ class aforo {
 
             $stmt = $conn->prepare($sql); 
             $stmt->bindParam(':ctd', $this->ctd);
-            if ($this->fecha == null) $this->fecha = now();
+            $now = new \DateTime();
+            if ($this->fecha == null) $this->fecha = $now->format("Y-m-d H:i:s");
             $stmt->bindParam(':fecha', $this->fecha);
             $stmt->execute(); //Ejecuto
         }

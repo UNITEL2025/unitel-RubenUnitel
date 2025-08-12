@@ -4,13 +4,51 @@
 require_once "MainController.php";
 
 class TpvController extends MainController {
+    public $productos;
+
     public function __construct() {
-        $this->name = "TPV";
+      $this->name = "TPV";
+      $this->productos = array();
+
+      foreach (producto::getToday() as $item) {
+        $this->productos[] = array(
+          "id" => $item["id_producto"],
+          "name" => $item["nombre"],
+          "price" => $item["precio"]
+        );
+      }
+      $this->productos = json_encode($this->productos);
     }
 }
 
-if (isset($_POST['guardar'])) {
-  $venta = new venta();
+$controller = new TpvController();
+
+if (isset($_POST['data'])) {
+  try {
+    $items = json_decode($_POST['data'], true); //Obtener la variable _POST (array productos)
+
+    $venta = new venta();
+    $venta->empleado_id = 1; //TODO
+    $venta->metodo_pago = venta::$metodos[(int) $_POST['metodo']];
+    foreach ($items as $item) {
+      $detalle = new detalle();
+      $detalle->producto_id = $item["id"];
+      $detalle->precio = $item["price"];
+      $detalle->ctd = $item["quantity"];
+
+      $venta->detalles[] = $detalle;
+
+      //Añadimos el aforo
+      $aforo = new aforo();
+      $aforo->ctd = $item["quantity"];
+      $aforo->save();
+    }
+    $venta->save();
+    echo TRUE;    
+  } catch (\Throwable $th) {
+    echo json_encode($th);
+  }
+  die();
 }
 
 echo '<!DOCTYPE html>
@@ -68,15 +106,16 @@ echo '<!DOCTYPE html>
 <body>
 
     <div class="d-flex align-items-center justify-content-between mb-4">
-  <button class="btn btn-outline-primary" aria-label="Ir a inicio">
+  <a href="DsbController.php" class="btn btn-outline-primary" aria-label="Ir a inicio">
     <i class="bi bi-house-door-fill"></i>
-  </button>
+  </a>
   <h1 class="m-0 text-center flex-grow-1">TPV Táctil - Cobros</h1>
   <div style="width: 38px;"></div> <!-- Espacio para balancear el botón y centrar título -->
 </div>
 
 
   <div class="container-fluid">
+
     <div class="row g-3">
 
       <!-- Productos (Columna izquierda) -->
@@ -86,6 +125,31 @@ echo '<!DOCTYPE html>
 
       <!-- Detalle de venta (Columna central) -->
       <div class="col-md-6 col-sm-12 detalle-venta">
+        <div id="alert_ok" hidden>
+          <div class="alert alert-success d-flex align-items-center alert-dismissible" role="alert">
+            <div>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-hand-thumbs-up" viewBox="0 0 16 16">
+                <path d="M8.864.046C7.908-.193 7.02.53 6.956 1.466c-.072 1.051-.23 2.016-.428 2.59-.125.36-.479 1.013-1.04 1.639-.557.623-1.282 1.178-2.131 1.41C2.685 7.288 2 7.87 2 8.72v4.001c0 .845.682 1.464 1.448 1.545 1.07.114 1.564.415 2.068.723l.048.03c.272.165.578.348.97.484.397.136.861.217 1.466.217h3.5c.937 0 1.599-.477 1.934-1.064a1.86 1.86 0 0 0 .254-.912c0-.152-.023-.312-.077-.464.201-.263.38-.578.488-.901.11-.33.172-.762.004-1.149.069-.13.12-.269.159-.403.077-.27.113-.568.113-.857 0-.288-.036-.585-.113-.856a2 2 0 0 0-.138-.362 1.9 1.9 0 0 0 .234-1.734c-.206-.592-.682-1.1-1.2-1.272-.847-.282-1.803-.276-2.516-.211a10 10 0 0 0-.443.05 9.4 9.4 0 0 0-.062-4.509A1.38 1.38 0 0 0 9.125.111zM11.5 14.721H8c-.51 0-.863-.069-1.14-.164-.281-.097-.506-.228-.776-.393l-.04-.024c-.555-.339-1.198-.731-2.49-.868-.333-.036-.554-.29-.554-.55V8.72c0-.254.226-.543.62-.65 1.095-.3 1.977-.996 2.614-1.708.635-.71 1.064-1.475 1.238-1.978.243-.7.407-1.768.482-2.85.025-.362.36-.594.667-.518l.262.066c.16.04.258.143.288.255a8.34 8.34 0 0 1-.145 4.725.5.5 0 0 0 .595.644l.003-.001.014-.003.058-.014a9 9 0 0 1 1.036-.157c.663-.06 1.457-.054 2.11.164.175.058.45.3.57.65.107.308.087.67-.266 1.022l-.353.353.353.354c.043.043.105.141.154.315.048.167.075.37.075.581 0 .212-.027.414-.075.582-.05.174-.111.272-.154.315l-.353.353.353.354c.047.047.109.177.005.488a2.2 2.2 0 0 1-.505.805l-.353.353.353.354c.006.005.041.05.041.17a.9.9 0 0 1-.121.416c-.165.288-.503.56-1.066.56z"/>
+              </svg>
+              Venta creada correctamente
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+          </div>
+        </div>
+
+        <div id="alert_ko" hidden>
+          <div class="alert alert-danger d-flex align-items-center alert-dismissible" role="alert">
+            <div>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-radioactive" viewBox="0 0 16 16">
+                <path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8"/>
+                <path d="M9.653 5.496A3 3 0 0 0 8 5c-.61 0-1.179.183-1.653.496L4.694 2.992A5.97 5.97 0 0 1 8 2c1.222 0 2.358.365 3.306.992zm1.342 2.324a3 3 0 0 1-.884 2.312 3 3 0 0 1-.769.552l1.342 2.683c.57-.286 1.09-.66 1.538-1.103a6 6 0 0 0 1.767-4.624zm-5.679 5.548 1.342-2.684A3 3 0 0 1 5.005 7.82l-2.994-.18a6 6 0 0 0 3.306 5.728ZM10 8a2 2 0 1 1-4 0 2 2 0 0 1 4 0"/>
+              </svg>
+              Error! Ocurrió un error inesperado. Contacte con el administrador del sistema.
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+          </div>
+        </div>
+
         <h4>Detalle de venta</h4>
         <table class="table table-striped" aria-label="Detalle de productos añadidos a la venta">
           <thead>
@@ -138,14 +202,14 @@ echo '<!DOCTYPE html>
 
         <h4 class="mt-4 mb-3">Método de cobro</h4>
         <div class="payment-methods d-flex flex-column" role="group" aria-label="Botones de método de cobro">
-          <button class="btn btn-success mb-2" id="payCash" onclick="pago();">
-            <i class="bi bi-cash-stack me-2"></i>Efectivo
+          <button class="btn btn-success mb-2" onclick="pagar(0);">
+            <i class="bi bi-cash-stack me-2"></i>EFECTIVO
           </button>
-          <button class="btn btn-primary mb-2" id="payCard">
-            <i class="bi bi-credit-card me-2"></i>Tarjeta
+          <button class="btn btn-primary mb-2" onclick="pagar(1);">
+            <i class="bi bi-credit-card me-2"></i>TARJETA
           </button>
-          <button class="btn btn-warning mb-2" id="payOther">
-            <i class="bi bi-wallet2 me-2"></i>Otro
+          <button class="btn btn-warning mb-2" onclick="pagar(2);">
+            <i class="bi bi-phone me-2"></i>BIZUM
           </button>
         </div>
       </div>
@@ -153,144 +217,13 @@ echo '<!DOCTYPE html>
     </div>
   </div>
 
+  <script>
+    const productos = '.$controller->productos.'
+  </script>
+
   <!-- Bootstrap 5 JS Bundle (Popper + Bootstrap JS) -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-  <script>
-    const productos = [
-      { id: 1, name: "Café", price: 1.20 },
-      { id: 2, name: "Té", price: 1.00 },
-      { id: 3, name: "Sandwich", price: 3.50 },
-      { id: 4, name: "Agua", price: 0.80 },
-      { id: 5, name: "Refresco", price: 1.50 },
-      { id: 6, name: "Pastel", price: 2.00 }
-    ];
-
-    let ventaItems = [];
-
-    const productosList = document.getElementById("productosList");
-    const detalleVentaBody = document.getElementById("detalleVentaBody");
-    const totalDisplay = document.getElementById("totalDisplay");
-    const importeRecibidoInput = document.getElementById("importeRecibido");
-    const importeDevolverInput = document.getElementById("importeDevolver");
-    const numPadButtons = document.querySelectorAll(".num-pad button[data-key]");
-    const clearInputBtn = document.getElementById("clearInput");
-
-    function renderProductos() {
-      productosList.innerHTML = "";
-      productos.forEach((producto) => {
-        const btn = document.createElement("button");
-        btn.className = "btn btn-outline-primary btn-producto";
-        btn.setAttribute("type", "button");
-        btn.setAttribute("aria-label", `Añadir ${producto.name} por ${producto.price.toFixed(2)} euros`);
-        btn.innerHTML = `
-          <span>${producto.name}</span>
-          <span>${producto.price.toFixed(2)} €</span>
-        `;
-        btn.onclick = () => {
-          const idx = ventaItems.findIndex(item => item.id === producto.id);
-          if (idx > -1) {
-            ventaItems[idx].quantity++;
-          } else {
-            ventaItems.push({...producto, quantity: 1});
-          }
-          actualizarDetalle();
-        };
-        productosList.appendChild(btn);
-      });
-    }
-
-    function actualizarDetalle() {
-      detalleVentaBody.innerHTML = "";
-      if (ventaItems.length === 0) {
-        detalleVentaBody.innerHTML = "<tr><td colspan="4" class="text-center text-muted fst-italic">No hay productos añadidos</td></tr>";
-        totalDisplay.textContent = "0.00 €";
-        importeDevolverInput.value = "";
-        return;
-      }
-
-      let total = 0;
-      ventaItems.forEach((item, index) => {
-        total += item.price * item.quantity;
-        const importe = item.price * item.quantity;
-
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td>${item.name}</td>
-          <td class="text-center">
-            <div class="cantidad-controls" role="group" aria-label="Control de cantidad para ${item.name}">
-              <button class="btn btn-sm btn-outline-secondary" aria-label="Disminuir cantidad" data-action="decrease" data-index="${index}">−</button>
-              <span aria-live="polite" aria-atomic="true">${item.quantity}</span>
-              <button class="btn btn-sm btn-outline-secondary" aria-label="Incrementar cantidad" data-action="increase" data-index="${index}">+</button>
-            </div>
-          </td>
-          <td class="text-end">${importe.toFixed(2)} €</td>
-          <td class="text-center">
-            <button class="btn btn-danger btn-sm" aria-label="Eliminar ${item.name}" data-action="remove" data-index="${index}">
-              <i class="bi bi-trash"></i>
-            </button>
-          </td>
-        `;
-        detalleVentaBody.appendChild(tr);
-      });
-
-      totalDisplay.textContent = total.toFixed(2) + " €";
-
-      if (importeRecibidoInput.value) calcularDevolucion();
-
-      detalleVentaBody.querySelectorAll("button").forEach(button => {
-        const action = button.dataset.action;
-        const index = Number(button.dataset.index);
-
-        button.onclick = () => {
-          if (action === "increase") {
-            ventaItems[index].quantity++;
-          } else if (action === "decrease") {
-            if (ventaItems[index].quantity > 1) {
-              ventaItems[index].quantity--;
-            } else {
-              ventaItems.splice(index, 1);
-            }
-          } else if (action === "remove") {
-            ventaItems.splice(index, 1);
-          }
-          actualizarDetalle();
-        };
-      });
-    }
-
-    function calcularDevolucion() {
-      let recibido = parseFloat(importeRecibidoInput.value);
-      if (isNaN(recibido)) recibido = 0;
-
-      let total = ventaItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
-      let devolver = recibido - total;
-      importeDevolverInput.value = devolver >= 0 ? devolver.toFixed(2) : "0.00";
-    }
-
-    numPadButtons.forEach(button => {
-      button.addEventListener("click", () => {
-        if (button.dataset.key === "." && importeRecibidoInput.value.includes(".")) return;
-        importeRecibidoInput.value += button.dataset.key;
-        calcularDevolucion();
-      });
-    });
-
-    clearInputBtn.addEventListener("click", () => {
-      importeRecibidoInput.value = "";
-      importeDevolverInput.value = "";
-    });
-
-    document.getElementById("payCash").addEventListener("click", () => alert("Pago en efectivo seleccionado."));
-    document.getElementById("payCard").addEventListener("click", () => alert("Pago con tarjeta seleccionado."));
-    document.getElementById("payOther").addEventListener("click", () => alert("Otro método de pago seleccionado."));
-
-    renderProductos();
-
-    function pago() {
-      alert("se hace el cobro");
-    }
-  </script>
+  <script src="js/tpv_script.js" rel="javascript"></script>
 </body>
 </html>';
 ?>

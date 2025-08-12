@@ -154,6 +154,25 @@ class producto {
         
         return $this;
     }
+
+    public static function getToday() {
+        $now = new \DateTime();
+
+        $sql = 'SELECT * 
+                FROM '.self::$table.' 
+                WHERE fecha_ini < "'.$now->format("Y-m-d").' 00:00:00" AND 
+                fecha_fin > "'.$now->format("Y-m-d").' 23:59:59";';
+
+        $conn = bd::get();
+        if ($conn instanceof PDO) {
+            $stmt = $conn->prepare($sql); 
+            $stmt->execute();
+            return $stmt->fetchAll();
+        }
+        else {
+            return array();
+        }
+    }
 }
 
 ?>
