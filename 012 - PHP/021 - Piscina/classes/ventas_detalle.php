@@ -150,7 +150,8 @@ class detalle {
                     $item["venta_id"],
                     $item["producto_id"],
                     $item["precio"],
-                    $item["ctd"]
+                    $item["ctd"],
+                    self::getReferencias($item["id_venta_detalle"])
                 );
             }
 

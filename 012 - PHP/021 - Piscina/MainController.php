@@ -25,7 +25,7 @@ class MainController {
     public $asistencia;
 
     public function __construct() {
-        $this->empresa = "Piscina Talavera";
+        $this->empresa = "Mi Piscina";
         $this->asistencia = asistencia::getCurrent();
     }
 

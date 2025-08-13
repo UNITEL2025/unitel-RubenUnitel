@@ -106,6 +106,8 @@ class venta {
                 $detalle->venta_id = $last_id;
                 $detalle->save();
             }
+
+            $this->id_venta = $last_id;
         }
         //Actualización
         else {

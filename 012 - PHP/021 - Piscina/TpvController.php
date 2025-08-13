@@ -44,12 +44,20 @@ if (isset($_POST['data'])) {
       $aforo->ctd = $item["quantity"];
       $aforo->save();
     }
-    $venta->save();
-    echo TRUE;    
+    $venta = $venta->save();
+
+    echo $venta->id_venta;    
   } catch (\Throwable $th) {
     echo json_encode($th);
   }
   die();
+}
+
+//Control de impresión de ticket
+if (isset($_GET["print_venta"])) {
+  $venta = venta::getById($_GET["print_venta"]);
+  $pdf = new PdfController();
+  $pdf->createTicket($venta);
 }
 
 echo '<!DOCTYPE html>
@@ -213,6 +221,7 @@ echo '<!DOCTYPE html>
           <button class="btn btn-warning mb-2" onclick="pagar(2);">
             <i class="bi bi-phone me-2"></i>BIZUM
           </button>
+          <a id="imprimir" href="#" target="_blank"></a>
         </div>
       </div>
 

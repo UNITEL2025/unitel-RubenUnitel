@@ -7,9 +7,15 @@ require_once "librerias/fpdf/fpdf.php";
 class PdfController extends FPDF {
     //Tamaño A4: 210 x 297 milímetros
 
-    
     protected $widths;
     protected $aligns;
+
+    protected $isFooter;
+
+    function SetFooter($w)
+    {
+        $this->isFooter = $w;
+    }
 
     function SetWidths($w)
     {
@@ -149,12 +155,14 @@ class PdfController extends FPDF {
 
     function Footer()
     {
-        // Go to 1.5 cm from bottom
-        $this->SetY(-15);
-        // Select Arial italic 8
-        $this->SetFont('Arial', 'I', 8);
-        // Print centered page number
-        $this->Cell(0, 10, mb_convert_encoding('Página '.$this->PageNo(), "ISO-8859-1"), 0, 0, 'C');
+        if ($this->isFooter == true) {
+            // Go to 1.5 cm from bottom
+            $this->SetY(-15);
+            // Select Arial italic 8
+            $this->SetFont('Arial', 'I', 8);
+            // Print centered page number
+            $this->Cell(0, 10, mb_convert_encoding('Página '.$this->PageNo(), "ISO-8859-1"), 0, 0, 'C');
+        }
     }
 
     // Una tabla más completa
@@ -228,5 +236,65 @@ class PdfController extends FPDF {
         $this->AddPage();
         $this->FancyTable($header,$data);*/
         $this->Output("I", $this->sanitize($titulo).".pdf");
+    }
+
+    public function createTicket(object $venta) {
+
+        $pdf = new FPDF();
+        $this->SetFooter(false);
+
+        $empleado = empleado::getById($venta->empleado_id);
+
+        foreach ($venta->detalles as $detalle) {
+            $producto = producto::getById($detalle->producto_id);
+
+            for ($i=0; $i < $detalle->ctd; $i++) {
+                $this->AddPage('P', array(80, 90));
+                $w = $h = 0;
+                
+                $this->SetFont('Arial', '', 12);
+                //(float w [, float h [, string txt [, mixed border [, int ln [, string align [, boolean fill [, mixed link]]]]]]])
+                $text = "************************************";
+                $this->Cell($w, $h, mb_convert_encoding($text, "ISO-8859-1"), 0, 1, "L");
+                
+                $w += 5;
+                $h += 5;
+                $text = "*              MI PISCINA              *";
+                $this->Cell($w, $h, mb_convert_encoding($text, "ISO-8859-1"), 0, 1, "L");
+                
+                $text = "************************************";
+                $this->Cell($w, $h, mb_convert_encoding($text, "ISO-8859-1"), 0, 1, "L");
+
+                $this->SetFont('Arial', '', 10);
+                $text = "Excmo Ayuntamiento de Oropesa";
+                $this->Cell($w, $h, mb_convert_encoding($text, "ISO-8859-1"), 0, 1, "L");
+
+                $text = "PISCINA MUNICIPAL";
+                $this->Cell($w, $h, mb_convert_encoding($text, "ISO-8859-1"), 0, 1, "L");
+
+                $this->SetFont('Arial', '', 12);
+                $text = "************************************";
+                $this->Cell($w, $h, mb_convert_encoding($text, "ISO-8859-1"), 0, 1, "L");
+
+                $this->SetFont('Arial', '', 12);
+                $text = "************************************";
+                $this->Cell($w, $h, mb_convert_encoding("REF: ".$detalle->referencias[$i]->referencia, "ISO-8859-1"), 0, 1, "L");
+
+                $this->SetFont('Arial', '', 12);
+                $text = "************************************";
+                $this->Cell($w, $h, mb_convert_encoding($text, "ISO-8859-1"), 0, 1, "L");
+                
+                $this->SetFont('Arial', '', 10);
+                $this->Cell($w, $h, mb_convert_encoding($producto->nombre, "ISO-8859-1"), 0, 1, "L");
+                $this->Cell($w, $h, mb_convert_encoding("Precio: ".$detalle->precio, "ISO-8859-1"), 0, 1, "L");
+                $this->Cell($w, $h, mb_convert_encoding("Pago: ".$venta->metodo_pago, "ISO-8859-1"), 0, 1, "L");
+
+                $this->SetFont('Arial', '', 8);
+                $this->Cell($w, $h, mb_convert_encoding("Le atendio ".$empleado->nombre." | ".$venta->id_venta." | ".$venta->fecha, "ISO-8859-1"), 0, 1, "L");
+
+                
+            }
+        }
+        $this->Output("I", $venta->id_venta.".pdf");
     }
 }

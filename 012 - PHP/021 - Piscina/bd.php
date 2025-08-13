@@ -140,6 +140,23 @@ class bd {
             )";
             $conn->exec($sql);
 
+            $sql = "CREATE TABLE IF NOT EXISTS arqueos (
+                id_arqueo INT(10) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                empleado_id INT(10) UNSIGNED,
+                fondo DOUBLE(10, 2) DEFAULT 0,
+                ventas DOUBLE(10, 2) DEFAULT 0,
+                descuadre DOUBLE(10, 2) DEFAULT 0,
+                fecha_ini TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                fecha_fin TIMESTAMP NULL DEFAULT NULL,
+                1cto INT,
+                CONSTRAINT fk3_empleado_id
+                    FOREIGN KEY (empleado_id)
+                    REFERENCES ".self::$db.".empleados (id_empleado)
+                    ON DELETE SET NULL
+                    ON UPDATE NO ACTION
+            )";
+            $conn->exec($sql);
+
             return true;
         } catch(PDOException $e) {
             return "Error! Conexión fallida: " . $e->getMessage();

@@ -26,13 +26,14 @@ class Index extends MainController {
 
 $controller = new Index();
 
+//Abrir sesión
 if (isset($_GET["id_empleado"])) {
-    $asistencia = new asistencia();
-    $asistencia->empleado_id = (int) $_GET["id_empleado"];
+    $asistencia = new asistencia((int) $_GET["id_empleado"]);
     $asistencia->save();
     header("Location: DsbController.php");
     die();
 }
+//Cerrar sesión
 if (isset($_GET["close"])) {
     if ($controller->asistencia != null) {
         $controller->asistencia->close();
@@ -53,7 +54,7 @@ echo '<!DOCTYPE html>
 
     <!-- Contenedor vertical con título y botones -->
     <div class="d-flex flex-column gap-4 align-items-center">
-      <h1>Piscina ...</h1>
+      <h1>'.$controller->empresa.'</h1>
 
       <div class="d-flex flex-column gap-3 w-100" style="max-width: 200px;">
       '.$controller->getEmpleados().'

@@ -9,16 +9,18 @@ class asistencia {
     public $empleado_id;
     public $fecha_ini;
     public $fecha_fin;
+    //Virtual
     public $empleado;
 
     //Atributos de la clase
     private static $table = "asistencias"; //Se tiene que llamar como la tabla de la BBDD
 
     public function __construct(
+        $empleado_id,
         $id_asistencia = null,
-        $empleado_id = null,
         $fecha_ini = null,
-        $fecha_fin = null
+        $fecha_fin = null,
+        $empleado = null
     ) {
         $this->id_asistencia = $id_asistencia;
         $this->empleado_id = $empleado_id;
@@ -37,10 +39,11 @@ class asistencia {
         else {
             foreach ($items as $item) {
                 $salida[] = new asistencia(
-                    $item["id_asistencia"],
                     $item["empleado_id"],
+                    $item["id_asistencia"],
                     $item["fecha_ini"],
-                    $item["fecha_fin"]
+                    $item["fecha_fin"],
+                    empleado::getById($items[0]["empleado_id"])
                 );
             }
             return $salida;
@@ -57,10 +60,11 @@ class asistencia {
             if (!empty($items))
             {
                 return new asistencia(
-                    $items[0]["id_asistencia"],
                     $items[0]["empleado_id"],
+                    $items[0]["id_asistencia"],
                     $items[0]["fecha_ini"],
-                    $items[0]["fecha_fin"]
+                    $items[0]["fecha_fin"],
+                    empleado::getById($items[0]["empleado_id"])
                 );
             }
             else {
@@ -126,10 +130,11 @@ class asistencia {
             if (!empty($items))
             {
                 return new asistencia(
-                    $items[0]["id_asistencia"],
                     $items[0]["empleado_id"],
+                    $items[0]["id_asistencia"],
                     $items[0]["fecha_ini"],
-                    $items[0]["fecha_fin"]
+                    $items[0]["fecha_fin"],
+                    empleado::getById($items[0]["empleado_id"])
                 );
             }
         }

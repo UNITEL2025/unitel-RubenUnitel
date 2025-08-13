@@ -135,12 +135,16 @@
             if (this.readyState == 4 && this.status == 200) {
                 
                 //OK
-                if (this.responseText == 1) {
+                if (this.responseText > 0) {
                     document.getElementById("alert_ok").hidden = false;
                     setTimeout(() => {
                         document.getElementById("alert_ok").hidden = true;
                     }, 3000); // 3000 ms = 3 segundos
                     limpiar();
+                    //Actualizamos el link de imprimir
+                    var link = document.getElementById("imprimir");
+                    link.setAttribute("href", "TpvController.php?print_venta="+this.responseText);
+                    link.click();
                 }
                 //KO
                 else {
