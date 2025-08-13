@@ -12,6 +12,7 @@ require_once "classes/referencia.php";
 require_once "classes/venta.php";
 require_once "classes/ventas_detalle.php";
 require_once "classes/aforo.php";
+require_once "classes/asistencia.php";
 
 require_once "PdfController.php";
 
@@ -21,9 +22,11 @@ class MainController {
     public $empresa; //Nombre público de la empresa
     public $back;
     public $obj;
+    public $asistencia;
 
     public function __construct() {
         $this->empresa = "Piscina Talavera";
+        $this->asistencia = asistencia::getCurrent();
     }
 
     public function mostrarError(string $error) {

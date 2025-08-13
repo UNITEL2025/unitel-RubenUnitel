@@ -18,6 +18,7 @@ class TpvController extends MainController {
         );
       }
       $this->productos = json_encode($this->productos);
+      parent::__construct();
     }
 }
 
@@ -175,6 +176,7 @@ echo '<!DOCTYPE html>
 
       <!-- Columna derecha: importe recibido, devolución, teclado y método de pago -->
       <div class="col-md-3 col-sm-12">
+        <h5 class="mb-3">'.$controller->asistencia->empleado->nombre.'</h5>
         <h4 class="mb-3">Importe recibido</h4>
         <input type="text" id="importeRecibido" class="form-control mb-3" placeholder="0.00" readonly aria-describedby="ayudaImporteRecibido" />
         <div id="ayudaImporteRecibido" class="form-text mb-4">Usa el teclado para ingresar importe recibido</div>

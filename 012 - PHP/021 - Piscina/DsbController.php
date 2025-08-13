@@ -5,6 +5,10 @@ require_once "MainController.php";
 
 class DbsController extends MainController {
 
+    public function __construct() {
+        $this->name = "Dashboard";
+        parent::__construct();
+    }
     //Devuelve el número total de ventas
     public function getVentas() {
         $return = "???"; //Definimos variable de retorno
@@ -210,7 +214,7 @@ echo '<!DOCTYPE html>
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Dashboard con menú lateral y tarjetas arriba</title>
+        <title>'.$controller->name.'</title>
 
         <!-- Bootstrap 5 CSS -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
@@ -267,6 +271,7 @@ echo '<!DOCTYPE html>
     <!-- Sidebar lateral con menú -->
     <nav id="sidebar">
         <h2>'.$controller->empresa.'</h2>
+        <h4>'.$controller->asistencia->empleado->nombre.'</h4>
 
         <ul class="nav flex-column mb-4">
             <li class="nav-item">
@@ -292,6 +297,9 @@ echo '<!DOCTYPE html>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="#">Configuración</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="Index.php?close=true">Salir</a>
             </li>
         </ul>
     </nav>

@@ -127,6 +127,19 @@ class bd {
             )";
             $conn->exec($sql);
 
+            $sql = "CREATE TABLE IF NOT EXISTS asistencias (
+                id_asistencia INT(10) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                empleado_id INT(10) UNSIGNED,
+                fecha_ini TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                fecha_fin TIMESTAMP NULL DEFAULT NULL
+                CONSTRAINT fk1_empleado_id
+                    FOREIGN KEY (empleado_id)
+                    REFERENCES ".self::$db.".empleados (id_empleado)
+                    ON DELETE SET NULL
+                    ON UPDATE NO ACTION
+            )";
+            $conn->exec($sql);
+
             return true;
         } catch(PDOException $e) {
             return "Error! Conexión fallida: " . $e->getMessage();
