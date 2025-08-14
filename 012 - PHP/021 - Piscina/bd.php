@@ -149,6 +149,17 @@ class bd {
                 fecha_ini TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 fecha_fin TIMESTAMP NULL DEFAULT NULL,
                 1cto INT,
+                2cto INT,
+                5cto INT,
+                10cto INT,
+                20cto INT,
+                50cto INT,
+                1euro INT,
+                2euro INT,
+                5euro INT,
+                10euro INT,
+                20euro INT,
+                50euro INT,
                 CONSTRAINT fk3_empleado_id
                     FOREIGN KEY (empleado_id)
                     REFERENCES ".self::$db.".empleados (id_empleado)

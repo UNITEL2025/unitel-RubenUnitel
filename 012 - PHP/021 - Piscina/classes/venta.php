@@ -153,6 +153,32 @@ class venta {
         }
         return $total;
     }
+
+    //Ventas por fecha y SÓLO efectivo
+    public static function getVentas($start, $end, $efectivo = true) {
+        $return = 0;
+
+        $sql = 'SELECT sum(vd.precio * vd.ctd) as total 
+                FROM ventas_detalle AS vd 
+                LEFT JOIN ventas AS v ON v.id_venta = vd.venta_id 
+                WHERE fecha BETWEEN "'.$start.'" AND "'.$end.' "';  
+        
+        if ($efectivo == true) $sql .= ' AND metodo_pago = "EFECTIVO";';
+
+        $conn = bd::get();
+        if ($conn instanceof PDO) {
+            $stmt = $conn->prepare($sql); 
+            $stmt->execute();
+            $items = $stmt->fetchAll();
+
+            if (isset($items[0]["total"]))
+            {
+                $return = $items[0]["total"];
+            }
+        }
+
+        return $return;
+    }
 }
 
 ?>

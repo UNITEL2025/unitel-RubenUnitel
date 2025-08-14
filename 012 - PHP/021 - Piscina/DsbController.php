@@ -9,6 +9,7 @@ class DbsController extends MainController {
         $this->name = "Dashboard";
         parent::__construct();
     }
+
     //Devuelve el número total de ventas
     public function getVentas() {
         $return = "???"; //Definimos variable de retorno
@@ -208,6 +209,12 @@ class DbsController extends MainController {
 }
 
 $controller = new DbsController();
+
+//Confirmamos si ya está abierta la sesión
+if ($controller->asistencia == null) {
+  header("Location: Index.php");
+  die();
+}
 
 echo '<!DOCTYPE html>
 <html lang="es">

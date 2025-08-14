@@ -24,6 +24,58 @@ class TpvController extends MainController {
 
 $controller = new TpvController();
 
+//Comprobamos que exista un empleado logeado
+if ($controller->asistencia == null) {
+  header("Location: Index.php");
+}
+
+//Abrimos arqueo
+If (isset($_POST["fondo"])) {
+  $arqueo = new arqueo();
+  $arqueo->empleado_id = $controller->asistencia->empleado_id;
+  $arqueo->fondo = $_POST["fondo"];
+  $arqueo->save();
+}
+
+//Comprobamos si hay abierto un arqueo
+if (arqueo::getCurrent() == null) {
+  echo '<!DOCTYPE html>
+          <html lang="es">
+          <head>
+            <meta charset="UTF-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1" />
+            <title>'.$controller->name.'</title>
+
+            <!-- Bootstrap 5 CSS -->
+            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+          </head>
+            <body class="d-flex justify-content-center align-items-center vh-100">
+
+              <!-- Contenedor vertical con título y botones -->
+              <div class="d-flex flex-column gap-4 align-items-center">
+                <h1>Apertura de Arqueo</h1>
+
+                <form action="TpvController.php?arqueo=true" method="POST">
+                  <div class="mb-3">
+                    <label class="form-label">Fondo de maniobra</label>
+                    <input type="text" class="form-control" id="fondo" name="fondo"/>
+                  </div>
+                  <button type="submit" class="btn btn-primary" name="guardar">
+                    <i class="bi bi-save-fill me-1"></i> ABRIR ARQUEO
+                  </button>
+                  <a href="DsbController.php" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left-circle-fill me-1"></i> Volver
+                  </a>
+                </form>
+              </div>
+
+              <!-- Bootstrap 5 JS Bundle -->
+              <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+            </body>
+          </html>';
+          die();
+}
+
 if (isset($_POST['data'])) {
   try {
     $items = json_decode($_POST['data'], true); //Obtener la variable _POST (array productos)
@@ -115,12 +167,15 @@ echo '<!DOCTYPE html>
 <body>
 
     <div class="d-flex align-items-center justify-content-between mb-4">
-  <a href="DsbController.php" class="btn btn-outline-primary" aria-label="Ir a inicio">
-    <i class="bi bi-house-door-fill"></i>
-  </a>
-  <h1 class="m-0 text-center flex-grow-1">TPV Táctil - Cobros</h1>
-  <div style="width: 38px;"></div> <!-- Espacio para balancear el botón y centrar título -->
-</div>
+      <a href="DsbController.php" class="btn btn-outline-primary" aria-label="Ir a inicio">
+        <i class="bi bi-house-door-fill"></i>
+      </a>
+      <a href="ArqueoController.php" class="btn btn-outline-primary" aria-label="Cerrar Arqueo">
+        <i class="bi bi-x-square"></i>
+      </a>
+      <h1 class="m-0 text-center flex-grow-1">TPV Táctil - Cobros</h1>
+      <div style="width: 38px;"></div> <!-- Espacio para balancear el botón y centrar título -->
+    </div>
 
 
   <div class="container-fluid">

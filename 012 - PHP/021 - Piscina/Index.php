@@ -40,6 +40,12 @@ if (isset($_GET["close"])) {
     }
 }
 
+//Confirmamos si ya está abierta la sesión
+if ($controller->asistencia != null) {
+  header("Location: DsbController.php");
+  die();
+}
+
 echo '<!DOCTYPE html>
 <html lang="es">
 <head>

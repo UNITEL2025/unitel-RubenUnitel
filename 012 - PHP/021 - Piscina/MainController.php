@@ -13,6 +13,7 @@ require_once "classes/venta.php";
 require_once "classes/ventas_detalle.php";
 require_once "classes/aforo.php";
 require_once "classes/asistencia.php";
+require_once "classes/arqueo.php";
 
 require_once "PdfController.php";
 
